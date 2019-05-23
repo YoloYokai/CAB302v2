@@ -1,45 +1,15 @@
-import javax.swing.SwingUtilities;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.BorderFactory;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+package Assignment;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionListener;
-import java.awt.event.MouseMotionAdapter;
-import javax.swing.JButton;
-
-public class GUI {
-
-    public static void main(String[] args) {
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                createAndShowGUI();
-            }
-        });
-    }
-
-    private static void createAndShowGUI() {
-        System.out.println("Created GUI on EDT? "+
-                SwingUtilities.isEventDispatchThread());
-        JFrame f = new JFrame("Swing Paint Demo");
-        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        f.add(new MyPanel());
-        f.setSize(1000,1000);
-        f.setVisible(true);
-    }
-}
+import java.awt.event.MouseEvent;
 
 class MyPanel extends JPanel {
 
     RedSquare redSquare = new RedSquare();
 
     public MyPanel() {
-
         setBorder(BorderFactory.createLineBorder(Color.black));
 
         addMouseListener(new MouseAdapter(){
