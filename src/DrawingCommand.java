@@ -36,7 +36,6 @@ class LineCommand implements DrawingCommand {
     public ArrayList<Double> coordinates() {
         return values;
     }
-
     public String property() {
         return null;
     }
@@ -56,7 +55,6 @@ class RectangleCommand implements DrawingCommand {
     public ArrayList<Double> coordinates() {
         return values;
     }
-
     public String property() {
         return null;
     }
