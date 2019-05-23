@@ -8,7 +8,12 @@ public interface DrawingCommand {
     String property();
 
     enum DrawCommands {
-        LINE("LINE"), RECTANGLE("RECTANGLE"), PEN("PEN"), FILL("FILL"), PLOT("PLOT");
+        LINE("LINE"),
+        RECTANGLE("RECTANGLE"),
+        ELLIPSE("ELLIPSE"),
+        PEN("PEN"),
+        FILL("FILL"),
+        PLOT("PLOT");
 
         private String string;
 
@@ -16,17 +21,16 @@ public interface DrawingCommand {
             this.string = string;
         }
 
-        public String price() {
+        public String cmd() {
             return string;
         }
     }
 }
-
 class LineCommand implements DrawingCommand {
     private ArrayList<Double> values;
 
-    public void Linecommand(ArrayList<Double> coodinates) {
-        this.values = coodinates;
+    public LineCommand(ArrayList<Double> coordinates){
+        this.values = coordinates;
     }
 
     public DrawCommands type() {
@@ -40,16 +44,15 @@ class LineCommand implements DrawingCommand {
         return null;
     }
 }
-
 class RectangleCommand implements DrawingCommand {
     private ArrayList<Double> values;
 
-    public void Linecommand(ArrayList<Double> coodinates) {
-        this.values = coodinates;
+    public RectangleCommand(ArrayList<Double> coordinates) {
+        this.values = coordinates;
     }
 
     public DrawCommands type() {
-        return (DrawCommands.LINE);
+        return (DrawCommands.RECTANGLE);
     }
 
     public ArrayList<Double> coordinates() {
@@ -57,5 +60,78 @@ class RectangleCommand implements DrawingCommand {
     }
     public String property() {
         return null;
+    }
+}
+class EllipseCommand implements DrawingCommand {
+    private ArrayList<Double> values;
+
+    public EllipseCommand(ArrayList<Double> coordinates) {
+        this.values = coordinates;
+    }
+
+    public DrawCommands type() {
+        return (DrawCommands.ELLIPSE);
+    }
+
+    public ArrayList<Double> coordinates() {
+        return values;
+    }
+    public String property() {
+        return null;
+    }
+}
+class PlotCommand implements DrawingCommand {
+    private ArrayList<Double> values;
+
+    public PlotCommand(ArrayList<Double> coordinates) {
+        this.values = coordinates;
+    }
+
+    public DrawCommands type() {
+        return (DrawCommands.PLOT);
+    }
+
+    public ArrayList<Double> coordinates() {
+        return values;
+    }
+    public String property() {
+        return null;
+    }
+}
+
+class PenCommand implements DrawingCommand {
+    private String property;
+
+    public PenCommand(String propertyin) {
+        this.property = propertyin;
+    }
+
+    public DrawCommands type() {
+        return (DrawCommands.PEN);
+    }
+
+    public ArrayList<Double> coordinates() {
+        return null;
+    }
+    public String property() {
+        return property;
+    }
+}
+class FillCommand implements DrawingCommand {
+    private String property;
+
+    public FillCommand(String propertyin) {
+        this.property = propertyin;
+    }
+
+    public DrawCommands type() {
+        return (DrawCommands.PEN);
+    }
+
+    public ArrayList<Double> coordinates() {
+        return null;
+    }
+    public String property() {
+        return property;
     }
 }

@@ -1,10 +1,9 @@
+import com.sun.source.tree.SwitchTree;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 public class FileParser {
@@ -24,12 +23,35 @@ public class FileParser {
                     command = reader.readLine();
                 }
                 reader.close();
-            } catch (FileNotFoundException e) {
-            } catch (IOException e) {
-            }
+            } catch (IOException e) {}
+            ArrayList<DrawingCommand> dFile = new ArrayList<>();
             for (int i = 0; i < commands.size(); i++) {
 
+                String[] coordstring = commands.get(i).split(" ");
+                ArrayList<Double> coordsdouble = new ArrayList<>();
+                String properties = null;
+                if(!commands.get(i).contains("PEN")&&!commands.get(i).contains("FILL")){
+                    for (int j = 1; j < coordstring.length; j++){coordsdouble.add(Double.parseDouble(coordstring[j]));}
+                }
+                else{
+                    for (int j = 1; j < coordstring.length; j++){
+                    properties=(coordstring[j]);
+                }
+                }
+                if(commands.get(i).contains(DrawingCommand.DrawCommands.LINE.cmd())){dFile.add(new LineCommand(coordsdouble));}
+                else if(commands.get(i).contains(DrawingCommand.DrawCommands.RECTANGLE.cmd())){dFile.add(new RectangleCommand(coordsdouble));}
+                else if(commands.get(i).contains(DrawingCommand.DrawCommands.ELLIPSE.cmd())){dFile.add(new EllipseCommand(coordsdouble));}
+                else if(commands.get(i).contains(DrawingCommand.DrawCommands.RECTANGLE.cmd())){dFile.add(new RectangleCommand(coordsdouble));}
+
+            }
+            for (DrawingCommand a : dFile) {
+                System.out.print(a.type().name()+" ");
+                if(a.type().name()!="PEN" && a.type().name()!="FILL"){
+                for (double b : a.coordinates()) {
+                    System.out.print(b+" ");
+                }
+                System.out.println(" ");
             }
         }
     }
-}
+}}
