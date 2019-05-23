@@ -1,9 +1,9 @@
-import com.sun.source.tree.SwitchTree;
-
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 public class FileParser {
@@ -39,19 +39,28 @@ public class FileParser {
                 }
                 }
                 if(commands.get(i).contains(DrawingCommand.DrawCommands.LINE.cmd())){dFile.add(new LineCommand(coordsdouble));}
-                else if(commands.get(i).contains(DrawingCommand.DrawCommands.RECTANGLE.cmd())){dFile.add(new RectangleCommand(coordsdouble));}
-                else if(commands.get(i).contains(DrawingCommand.DrawCommands.ELLIPSE.cmd())){dFile.add(new EllipseCommand(coordsdouble));}
-                else if(commands.get(i).contains(DrawingCommand.DrawCommands.RECTANGLE.cmd())){dFile.add(new RectangleCommand(coordsdouble));}
+                else if(commands.get(i).contains(DrawingCommand.DrawCommands.RECTANGLE.cmd())){dFile.add(new RectangleCommand(coordsdouble));} else if (commands.get(i).contains(DrawingCommand.DrawCommands.ELLIPSE.cmd())) {
+                    dFile.add(new EllipseCommand(coordsdouble));
+                } else if (commands.get(i).contains(DrawingCommand.DrawCommands.PLOT.cmd())) {
+                    dFile.add(new PlotCommand(coordsdouble));
+                } else if (commands.get(i).contains(DrawingCommand.DrawCommands.PEN.cmd())) {
+                    dFile.add(new PenCommand(properties));
+                } else if (commands.get(i).contains(DrawingCommand.DrawCommands.FILL.cmd())) {
+                    dFile.add(new FillCommand(properties));
+                }
 
             }
             for (DrawingCommand a : dFile) {
                 System.out.print(a.type().name()+" ");
-                if(a.type().name()!="PEN" && a.type().name()!="FILL"){
-                for (double b : a.coordinates()) {
-                    System.out.print(b+" ");
+                if (a.type().name() == "PEN" || a.type().name() == "FILL") {
+                    System.out.print(a.property() + " ");
+                } else {
+                    for (double b : a.coordinates()) {
+                        System.out.print(b+" ");
+                    }
                 }
                 System.out.println(" ");
             }
         }
     }
-}}
+}
