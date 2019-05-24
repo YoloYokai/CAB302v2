@@ -1,20 +1,19 @@
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 public class FileParser {
-    public static void main(String[] args) {
+    private ArrayList<DrawingCommand> dFile = new ArrayList<>();
+
+    public ArrayList<DrawingCommand> loadfile() {
         JFileChooser chooser = new JFileChooser(System.getProperty("user.home") + "\\Vec");
         FileFilter filter = new FileNameExtensionFilter("vec files", "vec");
         chooser.setFileFilter(filter);
         List<String> commands = new ArrayList<>();
         int returnVal = chooser.showOpenDialog(null);
         if (returnVal == JFileChooser.APPROVE_OPTION) {
-            System.out.println("You chose to open this file: " + chooser.getSelectedFile().getName());
             try {
                 BufferedReader reader = new BufferedReader(new FileReader(chooser.getSelectedFile()));
                 String command = reader.readLine();
@@ -24,7 +23,7 @@ public class FileParser {
                 }
                 reader.close();
             } catch (IOException e) {}
-            ArrayList<DrawingCommand> dFile = new ArrayList<>();
+            dFile.clear();
             for (int i = 0; i < commands.size(); i++) {
 
                 String[] coordstring = commands.get(i).split(" ");
@@ -38,28 +37,57 @@ public class FileParser {
                     properties=(coordstring[j]);
                 }
                 }
-                if(commands.get(i).contains(DrawingCommand.DrawCommands.LINE.cmd())){dFile.add(new LineCommand(coordsdouble));}
-                else if(commands.get(i).contains(DrawingCommand.DrawCommands.RECTANGLE.cmd())){dFile.add(new RectangleCommand(coordsdouble));} else if (commands.get(i).contains(DrawingCommand.DrawCommands.ELLIPSE.cmd())) {
-                    dFile.add(new EllipseCommand(coordsdouble));
+                if (commands.get(i).contains(DrawingCommand.DrawCommands.LINE.cmd())) {
+                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.LINE, commands.get(i)));
+                } else if (commands.get(i).contains(DrawingCommand.DrawCommands.RECTANGLE.cmd())) {
+                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.LINE, commands.get(i)));
+                } else if (commands.get(i).contains(DrawingCommand.DrawCommands.ELLIPSE.cmd())) {
+                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.LINE, commands.get(i)));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.PLOT.cmd())) {
-                    dFile.add(new PlotCommand(coordsdouble));
+                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.LINE, commands.get(i)));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.PEN.cmd())) {
-                    dFile.add(new PenCommand(properties));
+                    dFile.add(new PropertyCommand(properties, DrawingCommand.DrawCommands.PEN, commands.get(i)));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.FILL.cmd())) {
-                    dFile.add(new FillCommand(properties));
+                    dFile.add(new PropertyCommand(properties, DrawingCommand.DrawCommands.PEN, commands.get(i)));
                 }
 
             }
-            for (DrawingCommand a : dFile) {
-                System.out.print(a.type().name()+" ");
-                if (a.type().name() == "PEN" || a.type().name() == "FILL") {
-                    System.out.print(a.property() + " ");
-                } else {
-                    for (double b : a.coordinates()) {
-                        System.out.print(b+" ");
-                    }
+
+            return (dFile);
+        }
+        return null;
+    }
+
+    public void printcmds() {
+        for (DrawingCommand a : dFile) {
+            System.out.print(a.type().name() + " ");
+            if (a.type().name() == "PEN" || a.type().name() == "FILL") {
+                System.out.print(a.property() + " ");
+            } else {
+                for (double b : a.coordinates()) {
+                    System.out.print(b + " ");
                 }
-                System.out.println(" ");
+            }
+            System.out.println(" ");
+        }
+    }
+
+    public void savefile(ArrayList<DrawingCommand> input) {
+        JFileChooser chooser = new JFileChooser(System.getProperty("user.home") + "\\Vec");
+        FileFilter filter = new FileNameExtensionFilter("vec files", "vec");
+        chooser.setFileFilter(filter);
+
+        int returnVal = chooser.showSaveDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                File file = chooser.getSelectedFile();
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file + ".vec"));
+                for (DrawingCommand k : input) {
+                    writer.write(k.tostring());
+                    writer.newLine();
+                }
+                writer.close();
+            } catch (IOException e) {
             }
         }
     }
