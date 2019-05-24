@@ -1,14 +1,11 @@
 package Assignment;
 
-import javax.swing.SwingUtilities;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.BorderFactory;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
+import javax.swing.*;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import javax.swing.JButton;
+
 
 public class GUI {
 
@@ -27,5 +24,21 @@ public class GUI {
         f.add(new MyPanel());
         f.setSize(800,800);
         f.setVisible(true);
+        f.add(new MyPanel());
+        JMenuBar mb=new JMenuBar();
+        JMenu file;
+        JMenu edit;
+        JMenuItem save, load, undo, redo;
+        file=new JMenu("File");
+        edit=new JMenu("Edit");
+        save=new JMenuItem("Save");
+        load=new JMenuItem("Load");
+        undo=new JMenuItem("Undo");
+        redo=new JMenuItem("Redo");
+        file.add(save); file.add(load);
+        edit.add(undo); edit.add(redo);
+        mb.add(file);
+        mb.add(edit);
+        f.setJMenuBar(mb);
     }
 }
