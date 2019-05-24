@@ -7,7 +7,7 @@ import javax.swing.*;
 
 public class GUI {
 
-    JButton clearBtn, blackBtn, blueBtn, greenBtn, redBtn, magentaBtn,
+    JButton clearBtn, blackBtn, cyanBtn, greenBtn, redBtn, magentaBtn,
             orangeBtn, yellowBtn, plotBtn, lineBtn, rectangleBtn, ellipseBtn,
             polygonBtn, fillBtn;
     Paint drawArea;
@@ -18,8 +18,8 @@ public class GUI {
                 drawArea.clear();
             } else if (e.getSource() == blackBtn) {
                 drawArea.black();
-            } else if (e.getSource() == blueBtn) {
-                drawArea.blue();
+            } else if (e.getSource() == cyanBtn) {
+                drawArea.cyan();
             } else if (e.getSource() == greenBtn) {
                 drawArea.green();
             } else if (e.getSource() == redBtn) {
@@ -40,7 +40,7 @@ public class GUI {
 
     public void show() {
         // create main frame
-        JFrame frame = new JFrame("Swing Paint");
+        JFrame frame = new JFrame("Sketchy");
         Container content = frame.getContentPane();
         // set layout on content pane
         content.setLayout(new BorderLayout());
@@ -58,9 +58,9 @@ public class GUI {
         blackBtn = new JButton("Black");
         blackBtn.addActionListener(actionListener);
         blackBtn.setBackground(Color.BLACK);
-        blueBtn = new JButton("Blue");
-        blueBtn.setBackground(Color.BLUE);
-        blueBtn.addActionListener(actionListener);
+        cyanBtn = new JButton("Cyan");
+        cyanBtn.setBackground(Color.CYAN);
+        cyanBtn.addActionListener(actionListener);
         greenBtn = new JButton("Green");
         greenBtn.addActionListener(actionListener);
         greenBtn.setBackground(Color.GREEN);
@@ -84,7 +84,7 @@ public class GUI {
         controls.add(orangeBtn);
         controls.add(yellowBtn);
         controls.add(greenBtn);
-        controls.add(blueBtn);
+        controls.add(cyanBtn);
         controls.add(clearBtn);
 
         // add to top of content pane
@@ -133,9 +133,11 @@ public class GUI {
         JMenuBar mb=new JMenuBar();
         JMenu file;
         JMenu edit;
+        JMenu help;
         JMenuItem save, load, undo, redo;
         file=new JMenu("File");
         edit=new JMenu("Edit");
+        help=new JMenu("Help");
         save=new JMenuItem("Save");
         load=new JMenuItem("Load");
         undo=new JMenuItem("Undo");
@@ -144,6 +146,7 @@ public class GUI {
         edit.add(undo); edit.add(redo);
         mb.add(file);
         mb.add(edit);
+        mb.add(help);
         frame.setJMenuBar(mb);
 
         frame.setSize(600, 600);

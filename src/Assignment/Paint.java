@@ -91,9 +91,9 @@ public class Paint extends JComponent {
         g2.setPaint(Color.green);
     }
 
-    public void blue() {
+    public void cyan() {
         //apply blue colour
-        g2.setPaint(Color.blue);
+        g2.setPaint(Color.cyan);
     }
     public void orange() {
         //apply orange colour
