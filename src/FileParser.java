@@ -8,7 +8,7 @@ public class FileParser {
     private ArrayList<DrawingCommand> dFile = new ArrayList<>();
 
     public ArrayList<DrawingCommand> loadfile() {
-        JFileChooser chooser = new JFileChooser(System.getProperty("user.home") + "\\Vec");
+        JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));// + "\\Vec");
         FileFilter filter = new FileNameExtensionFilter("vec files", "vec");
         chooser.setFileFilter(filter);
         List<String> commands = new ArrayList<>();
@@ -73,7 +73,7 @@ public class FileParser {
     }
 
     public void savefile(ArrayList<DrawingCommand> input) {
-        JFileChooser chooser = new JFileChooser(System.getProperty("user.home") + "\\Vec");
+        JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));// + "\\Vec");
         FileFilter filter = new FileNameExtensionFilter("vec files", "vec");
         chooser.setFileFilter(filter);
 
