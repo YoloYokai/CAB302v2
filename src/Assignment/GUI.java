@@ -93,18 +93,27 @@ public class GUI {
         // create panel to switch between tools
         JPanel tools = new JPanel();
 
+        //add images to buttons
+        Icon plot = new ImageIcon(getClass().getResource("plot.png"));
+        Icon line = new ImageIcon(getClass().getResource("line.png"));
+        Icon rectangle = new ImageIcon(getClass().getResource("rectangle.png"));
+        Icon ellipse = new ImageIcon(getClass().getResource("ellipse.png"));
+        Icon polygon = new ImageIcon(getClass().getResource("polygon.png"));
+        Icon fill = new ImageIcon(getClass().getResource("fill.png"));
+
+
         // create buttons for tools
-        plotBtn = new JButton("Plot");
+        plotBtn = new JButton(plot);
         plotBtn.addActionListener(actionListener);
-        lineBtn = new JButton("Line");
+        lineBtn = new JButton(line);
         lineBtn.addActionListener(actionListener);
-        rectangleBtn = new JButton("Rectangle");
+        rectangleBtn = new JButton(rectangle);
         rectangleBtn.addActionListener(actionListener);
-        ellipseBtn = new JButton("Ellipse");
+        ellipseBtn = new JButton(ellipse);
         ellipseBtn.addActionListener(actionListener);
-        polygonBtn = new JButton("Polygon");
+        polygonBtn = new JButton(polygon);
         polygonBtn.addActionListener(actionListener);
-        fillBtn = new JButton("Fill");
+        fillBtn = new JButton(fill);
         fillBtn.addActionListener(actionListener);
 
 
