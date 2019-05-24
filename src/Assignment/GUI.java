@@ -57,6 +57,7 @@ public class GUI {
         clearBtn.addActionListener(actionListener);
         blackBtn = new JButton("Black");
         blackBtn.addActionListener(actionListener);
+        blackBtn.setForeground(Color.WHITE);
         blackBtn.setBackground(Color.BLACK);
         cyanBtn = new JButton("Cyan");
         cyanBtn.setBackground(Color.CYAN);
