@@ -1,3 +1,5 @@
+package Assignment;
+
 import java.util.ArrayList;
 
 public interface DrawingCommand {
@@ -47,6 +49,7 @@ class CreationCommand implements DrawingCommand {
     public ArrayList<Double> coordinates() {
         return values;
     }
+
     public String property() {
         return null;
     }
@@ -74,6 +77,7 @@ class PropertyCommand implements DrawingCommand {
     public ArrayList<Double> coordinates() {
         return null;
     }
+
     public String property() {
         return property;
     }

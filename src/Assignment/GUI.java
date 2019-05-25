@@ -1,9 +1,10 @@
 package Assignment;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
+import java.util.ArrayList;
 
 public class GUI {
 
@@ -56,6 +57,8 @@ public class GUI {
         content.setLayout(new BorderLayout());
         // create draw area
         drawArea = new Paint();
+        FileParser parser = new FileParser();
+        ArrayList<DrawingCommand> storagepoint;
 
         // add to content pane
         content.add(drawArea, BorderLayout.CENTER);
@@ -149,13 +152,27 @@ public class GUI {
         save=new JMenuItem("Save");
         load=new JMenuItem("Load");
         undo=new JMenuItem("Undo");
+        redo=new JMenuItem("Redo");
+        load.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parser.loadfile();
+            }
+        });
+        save.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                parser.savefile(parser.getdFile());
+
+            }
+        });
         file.add(save); file.add(load);
         edit.add(undo);
         mb.add(file);
         mb.add(edit);
         mb.add(help);
-        frame.setJMenuBar(mb);
 
+        frame.setJMenuBar(mb);
         frame.setSize(600, 600);
         // can close frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

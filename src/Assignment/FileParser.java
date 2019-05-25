@@ -1,3 +1,5 @@
+package Assignment;
+
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -6,6 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 public class FileParser {
     private ArrayList<DrawingCommand> dFile = new ArrayList<>();
+
+    public ArrayList<DrawingCommand> getdFile() {
+        return dFile;
+    }
 
     public ArrayList<DrawingCommand> loadfile() {
         JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));// + "\\Vec");
@@ -31,11 +37,10 @@ public class FileParser {
                 String properties = null;
                 if(!commands.get(i).contains("PEN")&&!commands.get(i).contains("FILL")){
                     for (int j = 1; j < coordstring.length; j++){coordsdouble.add(Double.parseDouble(coordstring[j]));}
-                }
-                else{
+                } else{
                     for (int j = 1; j < coordstring.length; j++){
-                    properties=(coordstring[j]);
-                }
+                        properties=(coordstring[j]);
+                    }
                 }
                 if (commands.get(i).contains(DrawingCommand.DrawCommands.LINE.cmd())) {
                     dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.LINE, commands.get(i)));
