@@ -150,6 +150,7 @@ public class GUI {
             @Override
             public void actionPerformed(ActionEvent e) {
                 parser.loadfile();
+                drawArea.update(parser.getdFile());
             }
         });
         save.addActionListener(new ActionListener() {
