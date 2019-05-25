@@ -8,16 +8,14 @@ import java.util.ArrayList;
 
 public class GUI {
 
-    JButton clearBtn, blackBtn, cyanBtn, greenBtn, redBtn, magentaBtn,
+    JButton blackBtn, cyanBtn, greenBtn, redBtn, magentaBtn,
             orangeBtn, yellowBtn, plotBtn, lineBtn, rectangleBtn, ellipseBtn,
             polygonBtn, fillBtn;
     Paint drawArea;
     ActionListener actionListener = new ActionListener() {
 
         public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == clearBtn) {
-                drawArea.clear();
-            } else if (e.getSource() == blackBtn) {
+            if (e.getSource() == blackBtn) {
                 drawArea.black();
             } else if (e.getSource() == cyanBtn) {
                 drawArea.cyan();
@@ -31,6 +29,18 @@ public class GUI {
                 drawArea.orange();
             } else if (e.getSource() == yellowBtn) {
                 drawArea.yellow();
+            } else if (e.getSource() == plotBtn) {
+                drawArea.plot();
+            } else if (e.getSource() == lineBtn) {
+                drawArea.line();
+            } else if (e.getSource() == rectangleBtn) {
+                drawArea.rectangle();
+            } else if (e.getSource() == ellipseBtn) {
+                drawArea.ellipse();
+            } else if (e.getSource() == polygonBtn) {
+                drawArea.polygon();
+            } else if (e.getSource() == fillBtn) {
+                drawArea.fill();
             }
         }
     };
@@ -56,8 +66,6 @@ public class GUI {
         JPanel controls = new JPanel();
 
         // create buttons
-        clearBtn = new JButton("Clear");
-        clearBtn.addActionListener(actionListener);
         blackBtn = new JButton("Black");
         blackBtn.addActionListener(actionListener);
         blackBtn.setForeground(Color.WHITE);
@@ -89,7 +97,6 @@ public class GUI {
         controls.add(yellowBtn);
         controls.add(greenBtn);
         controls.add(cyanBtn);
-        controls.add(clearBtn);
 
         // add to top of content pane
         content.add(controls, BorderLayout.NORTH);
@@ -138,14 +145,13 @@ public class GUI {
         JMenu file;
         JMenu edit;
         JMenu help;
-        JMenuItem save, load, undo, redo;
+        JMenuItem save, load, undo;
         file=new JMenu("File");
         edit=new JMenu("Edit");
         help=new JMenu("Help");
         save=new JMenuItem("Save");
         load=new JMenuItem("Load");
         undo=new JMenuItem("Undo");
-        redo=new JMenuItem("Redo");
         load.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -161,7 +167,7 @@ public class GUI {
             }
         });
         file.add(save); file.add(load);
-        edit.add(undo); edit.add(redo);
+        edit.add(undo);
         mb.add(file);
         mb.add(edit);
         mb.add(help);
