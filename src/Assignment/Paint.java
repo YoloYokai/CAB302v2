@@ -117,7 +117,6 @@ public class Paint extends JComponent {
                 ArrayList<Integer> Coords = new ArrayList<>();
 
                 if (cmd.property() == null) {
-                    System.out.println(cmd.tostring());
                     boolean x = true;
                     for (Double b : cmd.coordinates()) {
                         if (x) {
@@ -132,21 +131,23 @@ public class Paint extends JComponent {
                         g2.drawLine(Coords.get(0), Coords.get(1), Coords.get(2), Coords.get(3));
                         repaint();
                     } else if (cmd.type() == DrawingCommand.DrawCommands.RECTANGLE) {
-                        if (true)
-                            g2.drawRect(Coords.get(0), Coords.get(1), Coords.get(2) - Coords.get(0), Coords.get(3) - Coords.get(1));
+                        g2.drawRect(Coords.get(0), Coords.get(1), Coords.get(2) - Coords.get(0), Coords.get(3) - Coords.get(1));
                         repaint();
                     } else if (cmd.type() == DrawingCommand.DrawCommands.PLOT) {
                         g2.drawLine(Coords.get(0), Coords.get(1), Coords.get(0), Coords.get(1));
+                        repaint();
                     }
                 } else {
-                    if (cmd.type() == DrawingCommand.DrawCommands.FILL) {
-
+                    if (cmd.type() == DrawingCommand.DrawCommands.PEN) {
+                        g2.setPaint(Color.decode(cmd.property()));
                     }
                 }
 
             }
         }
     }
+
+
     protected void paintComponent(Graphics g) {
         if (image == null) {
             // image to draw null ==> we create
@@ -160,6 +161,10 @@ public class Paint extends JComponent {
         g.drawImage(image, 0, 0, null);
     }
 
+    public void undo(ArrayList<DrawingCommand> a) {
+        this.clear();
+        this.update(a);
+    }
     public void clear() {
         g2.setPaint(Color.white);
         // draws white on entire draw area to clear

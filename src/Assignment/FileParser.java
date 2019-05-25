@@ -13,6 +13,10 @@ public class FileParser {
         return dFile;
     }
 
+    public void setdFile(ArrayList<DrawingCommand> a) {
+        this.dFile = a;
+    }
+
     public ArrayList<DrawingCommand> loadfile() {
         JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));// + "\\Vec");
         FileFilter filter = new FileNameExtensionFilter("vec files", "vec");

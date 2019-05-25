@@ -166,6 +166,17 @@ public class GUI {
 
             }
         });
+        undo.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                ArrayList<DrawingCommand> a = new ArrayList<>();
+                a = parser.getdFile();
+                a.remove(parser.getdFile().size() - 1);
+                drawArea.clear();
+                drawArea.update(a);
+                parser.setdFile(a);
+            }
+        });
         file.add(save); file.add(load);
         edit.add(undo);
         mb.add(file);
