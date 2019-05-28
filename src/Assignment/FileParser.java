@@ -13,6 +13,10 @@ public class FileParser {
         return dFile;
     }
 
+    public void setdFile(ArrayList<DrawingCommand> a) {
+        this.dFile = a;
+    }
+
     public ArrayList<DrawingCommand> loadfile() {
         JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));// + "\\Vec");
         FileFilter filter = new FileNameExtensionFilter("vec files", "vec");
@@ -45,15 +49,15 @@ public class FileParser {
                 if (commands.get(i).contains(DrawingCommand.DrawCommands.LINE.cmd())) {
                     dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.LINE, commands.get(i)));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.RECTANGLE.cmd())) {
-                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.LINE, commands.get(i)));
+                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.RECTANGLE, commands.get(i)));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.ELLIPSE.cmd())) {
-                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.LINE, commands.get(i)));
+                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.ELLIPSE, commands.get(i)));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.PLOT.cmd())) {
-                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.LINE, commands.get(i)));
+                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.PLOT, commands.get(i)));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.PEN.cmd())) {
                     dFile.add(new PropertyCommand(properties, DrawingCommand.DrawCommands.PEN, commands.get(i)));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.FILL.cmd())) {
-                    dFile.add(new PropertyCommand(properties, DrawingCommand.DrawCommands.PEN, commands.get(i)));
+                    dFile.add(new PropertyCommand(properties, DrawingCommand.DrawCommands.FILL, commands.get(i)));
                 }
 
             }
