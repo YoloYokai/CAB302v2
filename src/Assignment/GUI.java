@@ -1,157 +1,65 @@
 package Assignment;
 
 import javax.swing.*;
+import java.awt.event.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import java.awt.geom.*;
+import java.util.*;
 
-public class GUI {
 
+public class GUI extends JFrame {
     JButton blackBtn, cyanBtn, greenBtn, redBtn, magentaBtn,
             orangeBtn, yellowBtn, plotBtn, lineBtn, rectangleBtn, ellipseBtn,
-            polygonBtn, fillBtn;
-    Paint drawArea;
-    ActionListener actionListener = new ActionListener() {
+            polygonBtn, noFillBtn, fillBtn;
 
-        public void actionPerformed(ActionEvent e) {
-            if (e.getSource() == blackBtn) {
-                drawArea.black();
-            } else if (e.getSource() == cyanBtn) {
-                drawArea.cyan();
-            } else if (e.getSource() == greenBtn) {
-                drawArea.green();
-            } else if (e.getSource() == redBtn) {
-                drawArea.red();
-            } else if (e.getSource() == magentaBtn) {
-                drawArea.magenta();
-            } else if (e.getSource() == orangeBtn) {
-                drawArea.orange();
-            } else if (e.getSource() == yellowBtn) {
-                drawArea.yellow();
-            } else if (e.getSource() == plotBtn) {
-                drawArea.plot();
-            } else if (e.getSource() == lineBtn) {
-                drawArea.line();
-            } else if (e.getSource() == rectangleBtn) {
-                drawArea.rectangle();
-            } else if (e.getSource() == ellipseBtn) {
-                drawArea.ellipse();;
-            } else if (e.getSource() == polygonBtn) {
-                drawArea.polygon();
-            } else if (e.getSource() == fillBtn) {
-                drawArea.fill();
-            }
-        }
-    };
+    // Used to monitor which shape is selected
+    int currentAction = 1;
+    int currentColour = 1;
+
+    // Stores drawing rules
+    Graphics2D graphSettings;
+
+    // Default stroke and fill colours
+    Color strokeColor = Color.BLACK, fillColor = Color.BLACK;
 
     public static void main(String[] args) {
-        new GUI().show();
+        new GUI();
     }
 
-    public void show() {
-        // create main frame
-        JFrame frame = new JFrame("Sketchy");
-        Container content = frame.getContentPane();
-        // set layout on content pane
-        content.setLayout(new BorderLayout());
-        // create draw area
-        drawArea = new Paint();
-        FileParser parser = new FileParser();
-        ArrayList<DrawingCommand> storagepoint;
+    // Defines JFrame default settings
+    public GUI() {
+        // Default window width and height
+        this.setSize(800, 600);
 
-        // add to content pane
-        content.add(drawArea, BorderLayout.CENTER);
-        // create controls to apply colors and call clear feature
-        JPanel controls = new JPanel();
+        // Sets window title to application name
+        this.setTitle("Sketchy");
 
-        // create buttons
-        blackBtn = new JButton("Black");
-        blackBtn.addActionListener(actionListener);
-        blackBtn.setForeground(Color.WHITE);
-        blackBtn.setBackground(Color.BLACK);
-        cyanBtn = new JButton("Cyan");
-        cyanBtn.setBackground(Color.CYAN);
-        cyanBtn.addActionListener(actionListener);
-        greenBtn = new JButton("Green");
-        greenBtn.addActionListener(actionListener);
-        greenBtn.setBackground(Color.GREEN);
-        redBtn = new JButton("Red");
-        redBtn.addActionListener(actionListener);
-        redBtn.setBackground(Color.RED);
-        magentaBtn = new JButton("Magenta");
-        magentaBtn.addActionListener(actionListener);
-        magentaBtn.setBackground(Color.MAGENTA);
-        orangeBtn = new JButton("Orange");
-        orangeBtn.addActionListener(actionListener);
-        orangeBtn.setBackground(Color.ORANGE);
-        yellowBtn = new JButton("Yellow");
-        yellowBtn.addActionListener(actionListener);
-        yellowBtn.setBackground(Color.YELLOW);
+        // Closes the frame
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // add buttons to panel
-        controls.add(blackBtn);
-        controls.add(magentaBtn);
-        controls.add(redBtn);
-        controls.add(orangeBtn);
-        controls.add(yellowBtn);
-        controls.add(greenBtn);
-        controls.add(cyanBtn);
-
-        // add to top of content pane
-        content.add(controls, BorderLayout.NORTH);
-
-        // create panel to switch between tools
-        JPanel tools = new JPanel();
-
-        //add images to buttons
-        Icon plot = new ImageIcon(getClass().getResource("plot.png"));
-        Icon line = new ImageIcon(getClass().getResource("line.png"));
-        Icon rectangle = new ImageIcon(getClass().getResource("rectangle.png"));
-        Icon ellipse = new ImageIcon(getClass().getResource("ellipse.png"));
-        Icon polygon = new ImageIcon(getClass().getResource("polygon.png"));
-        Icon fill = new ImageIcon(getClass().getResource("fill.png"));
-
-
-        // create buttons for tools
-        plotBtn = new JButton(plot);
-        plotBtn.addActionListener(actionListener);
-        lineBtn = new JButton(line);
-        lineBtn.addActionListener(actionListener);
-        rectangleBtn = new JButton(rectangle);
-        rectangleBtn.addActionListener(actionListener);
-        ellipseBtn = new JButton(ellipse);
-        ellipseBtn.addActionListener(actionListener);
-        polygonBtn = new JButton(polygon);
-        polygonBtn.addActionListener(actionListener);
-        fillBtn = new JButton(fill);
-        fillBtn.addActionListener(actionListener);
-
-
-        // add buttons to tools panel
-        tools.add(plotBtn);
-        tools.add(lineBtn);
-        tools.add(rectangleBtn);
-        tools.add(ellipseBtn);
-        tools.add(polygonBtn);
-        tools.add(fillBtn);
-
-        // add to bottom of content pane
-        content.add(tools, BorderLayout.SOUTH);
-
-
-        // add menu bar
+        // Adds menu bar and items
         JMenuBar mb=new JMenuBar();
-        JMenu file;
-        JMenu edit;
-        JMenu help;
+        JMenu file, edit, help;
         JMenuItem save, load, undo;
+
         file=new JMenu("File");
         edit=new JMenu("Edit");
         help=new JMenu("Help");
         save=new JMenuItem("Save");
         load=new JMenuItem("Load");
         undo=new JMenuItem("Undo");
+
+        file.add(save);
+        file.add(load);
+        edit.add(undo);
+        mb.add(file);
+        mb.add(edit);
+        mb.add(help);
+
+        this.setJMenuBar(mb);
+
+        // Navigates files via the menu bar
+        FileParser parser = new FileParser();
         load.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -165,17 +73,374 @@ public class GUI {
 
             }
         });
-        file.add(save); file.add(load);
-        edit.add(undo);
-        mb.add(file);
-        mb.add(edit);
-        mb.add(help);
 
-        frame.setJMenuBar(mb);
-        frame.setSize(600, 600);
-        // can close frame
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        // show the swing paint result
-        frame.setVisible(true);
+        // Swing box to hold the tool buttons
+        Box toolBox = Box.createHorizontalBox();
+
+        // Creates a JPanel to hold the box
+        JPanel toolPanel = new JPanel();
+
+        //Calls a function to create buttons
+        plotBtn = makeButtons("./src/Assignment/plot.png", 1);
+        lineBtn = makeButtons("./src/Assignment/line.png", 2);
+        rectangleBtn = makeButtons("./src/Assignment/rectangle.png", 3);
+        ellipseBtn = makeButtons("./src/Assignment/ellipse.png", 4);
+        polygonBtn = makeButtons("./src/Assignment/polygon.png", 5);
+
+        blackBtn = makeColourButtons("./src/Assignment/black.png", 1 );
+        cyanBtn = makeColourButtons("./src/Assignment/cyan.png", 2 );
+        greenBtn = makeColourButtons("./src/Assignment/green.png", 3);
+        redBtn = makeColourButtons("./src/Assignment/red.png", 4 );
+        magentaBtn = makeColourButtons("./src/Assignment/magenta.png", 5);
+        orangeBtn = makeColourButtons("./src/Assignment/orange.png", 6);
+        yellowBtn = makeColourButtons("./src/Assignment/yellow.png", 7);
+
+        //Pass true/false value depending on if the shape is being filled in
+        noFillBtn = makeFillButtons("./src/Assignment/nofill.png", 6, true);
+        fillBtn = makeFillButtons("./src/Assignment/fill.png", 7, false);
+
+
+        // Shows the frame
+        this.setVisible(true);
+
+        // add buttons to tools panel
+        toolBox.add(plotBtn);
+        toolBox.add(lineBtn);
+        toolBox.add(rectangleBtn);
+        toolBox.add(ellipseBtn);
+        toolBox.add(polygonBtn);
+        toolBox.add(noFillBtn);
+        toolBox.add(fillBtn);
+
+        // Add the box of buttons to the panel
+        toolPanel.add(toolBox);
+
+        // Position the buttons in the bottom of the frame
+        this.add(toolPanel, BorderLayout.SOUTH);
+
+        // Creates new JPanel for colour swatches
+        JPanel colours = new JPanel();
+
+        // Add colour buttons to panel
+        colours.add(blackBtn);
+        colours.add(cyanBtn);
+        colours.add(magentaBtn);
+        colours.add(redBtn);
+        colours.add(orangeBtn);
+        colours.add(yellowBtn);
+        colours.add(greenBtn);
+
+
+        // Add to top of content pane
+        this.add(colours, BorderLayout.NORTH);
+
+        // Make the drawing area take up the rest of the frame
+        this.add(new Canvas(), BorderLayout.CENTER);
+
+        // Show the frame
+        this.setVisible(true);
+    }
+
+    // Produces buttons with supplied images as icons
+    // ActionNum associates buttons with which shapes is being drawn
+    public JButton makeButtons(String iconFile, final int actionNum) {
+        JButton aButton = new JButton();
+        Icon butIcon = new ImageIcon(iconFile);
+        aButton.setIcon(butIcon);
+
+        // Make the proper actionPerformed method execute when the
+        // specific button is pressed
+        aButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                currentAction = actionNum;
+            }
+        });
+
+        return aButton;
+    }
+
+    // Produces colour buttons with supplied images as icons
+    public JButton makeColourButtons(String iconFile, final int colourNum) {
+        JButton aButton = new JButton();
+        Icon butIcon = new ImageIcon(iconFile);
+        aButton.setIcon(butIcon);
+
+        // Make the proper actionPerformed method execute when the
+        // specific button is pressed
+        aButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                currentColour = colourNum;
+                if (colourNum == 1){
+                    strokeColor = Color.BLACK;
+                    fillColor = Color.BLACK;
+                }
+                else if (colourNum == 2){
+                    strokeColor = Color.CYAN;
+                    fillColor = Color.CYAN;
+                }
+                else if (colourNum == 3){
+                    strokeColor = Color.GREEN;
+                    fillColor = Color.GREEN;
+                }
+                else if (colourNum == 4){
+                    strokeColor = Color.RED;
+                    fillColor = Color.RED;
+                }
+                else if (colourNum == 5){
+                    strokeColor = Color.MAGENTA;
+                    fillColor = Color.MAGENTA;
+                }
+                else if (colourNum == 6){
+                    strokeColor = Color.ORANGE;
+                    fillColor = Color.ORANGE;
+                }
+                else if (colourNum == 7){
+                    strokeColor = Color.YELLOW;
+                    fillColor = Color.YELLOW;
+                }
+            }
+        });
+        return aButton;
+    }
+
+    // Similar function to above, but includes a color chooser with dialogue
+    public JButton makeFillButtons(String iconFile, final int actionNum, final boolean nofill) {
+        JButton aButton = new JButton();
+        Icon butIcon = new ImageIcon(iconFile);
+        aButton.setIcon(butIcon);
+
+        aButton.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+
+                if (nofill) {
+                    strokeColor = JColorChooser.showDialog(null, "Choose a Stroke", Color.BLACK);
+                } else {
+                    fillColor = JColorChooser.showDialog(null, "Choose a Fill", Color.BLACK);
+                }
+            }
+        });
+
+        return aButton;
+    }
+
+    private class Canvas extends JComponent
+    {
+
+        // ArrayLists that contain each shape drawn along with
+        // that shapes stroke and fill
+
+        ArrayList<Shape> shapes = new ArrayList<Shape>();
+        ArrayList<Color> shapeFill = new ArrayList<Color>();
+        ArrayList<Color> shapeStroke = new ArrayList<Color>();
+
+        Point drawStart, drawEnd;
+
+        // Monitors events on the drawing area of the frame
+
+        public Canvas()
+        {
+
+            this.addMouseListener(new MouseAdapter()
+            {
+
+                public void mousePressed(MouseEvent e)
+                {
+
+                    if(currentAction != 1){
+
+                        // When the mouse is pressed get x & y position
+
+                        drawStart = new Point(e.getX(), e.getY());
+                        drawEnd = drawStart;
+                        repaint();
+
+                    }
+                }
+
+                public void mouseReleased(MouseEvent e)
+                {
+
+                    if(currentAction != 1){
+
+                        // Create a shape using the starting x & y
+                        // and finishing x & y positions
+
+                        Shape aShape = null;
+
+                        if (currentAction == 2){
+                            aShape = drawLine(drawStart.x, drawStart.y,
+                                    e.getX(), e.getY());
+                        } else if (currentAction == 3) {
+                            // Create a new rectangle using x & y coordinates
+                            aShape = drawRectangle(drawStart.x, drawStart.y,
+                                    e.getX(), e.getY());
+                        } else if (currentAction == 4){
+                            aShape = drawEllipse(drawStart.x, drawStart.y,
+                                    e.getX(), e.getY());
+                        }
+
+                        // Add shapes, fills and colors to their ArrayLists
+                        shapes.add(aShape);
+                        shapeFill.add(fillColor);
+                        shapeStroke.add(strokeColor);
+
+                        // repaint the drawing area
+                        drawStart = null;
+                        drawEnd = null;
+
+                        repaint();
+
+                    }
+
+                }
+            } );
+
+            this.addMouseMotionListener(new MouseMotionAdapter()
+            {
+
+                public void mouseDragged(MouseEvent e)
+                {
+
+                    // If this is a brush have shapes go on the screen quickly
+
+                    if(currentAction == 1){
+
+                        int x = e.getX();
+                        int y = e.getY();
+
+                        Shape aShape = null;
+
+                        // Make stroke and fill equal to eliminate the fact that this is an ellipse
+
+                        strokeColor = fillColor;
+
+                        aShape = drawBrush(x,y,5,5);
+
+                        shapes.add(aShape);
+                        shapeFill.add(fillColor);
+                        shapeStroke.add(strokeColor);
+                    }
+
+                    // Get the final x & y position after the mouse is dragged
+
+                    drawEnd = new Point(e.getX(), e.getY());
+                    repaint();
+                }
+            } );
+        }
+
+
+        public void paint(Graphics g)
+        {
+            // Class used to define the shapes to be drawn
+            graphSettings = (Graphics2D)g;
+
+            // Antialiasing cleans up the jagged lines and defines rendering rules
+            graphSettings.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                    RenderingHints.VALUE_ANTIALIAS_ON);
+
+            // Defines the line width of the stroke
+            graphSettings.setStroke(new BasicStroke(4));
+
+            // Iterators created to cycle through strokes and fills
+            Iterator<Color> strokeCounter = shapeStroke.iterator();
+            Iterator<Color> fillCounter = shapeFill.iterator();
+
+            for (Shape s : shapes)
+            {
+                // Grabs the next stroke from the color arraylist
+                graphSettings.setPaint(strokeCounter.next());
+
+                graphSettings.draw(s);
+
+                // Grabs the next fill from the color arraylist
+                graphSettings.setPaint(fillCounter.next());
+
+                graphSettings.fill(s);
+            }
+
+            // Guide shape used for drawing
+            if (drawStart != null && drawEnd != null)
+            {
+                // Makes the guide shape transparent and gray
+                graphSettings.setComposite(AlphaComposite.getInstance(
+                        AlphaComposite.SRC_OVER, 0.40f));
+                graphSettings.setPaint(Color.LIGHT_GRAY);
+
+                Shape aShape = null;
+
+                if (currentAction == 2){
+                    // Create a new line using x & y coordinates
+                    aShape = drawLine(drawStart.x, drawStart.y,
+                            drawEnd.x, drawEnd.y);
+                } else
+
+                if (currentAction == 3){
+                    // Create a new rectangle using x & y coordinates
+
+                    aShape = drawRectangle(drawStart.x, drawStart.y,
+                            drawEnd.x, drawEnd.y);
+                } else
+
+                if (currentAction == 4) {
+
+                    // Create a new ellipse using x & y coordinates
+                    aShape = drawEllipse(drawStart.x, drawStart.y,
+                            drawEnd.x, drawEnd.y);
+                }
+
+                graphSettings.draw(aShape);
+            }
+        }
+
+        // Helper function for drawing the rectangle correctly
+        private Rectangle2D.Float drawRectangle(
+                int x1, int y1, int x2, int y2)
+        {
+            int x = Math.min(x1, x2);
+            int y = Math.min(y1, y2);
+
+            int width = Math.abs(x1 - x2);
+            int height = Math.abs(y1 - y2);
+
+            return new Rectangle2D.Float(
+                    x, y, width, height);
+        }
+
+        // Helper function for drawing the ellipse correctly
+        private Ellipse2D.Float drawEllipse(int x1, int y1, int x2, int y2)
+        {
+
+            int x = Math.min(x1, x2);
+            int y = Math.min(y1, y2);
+            int width = Math.abs(x1 - x2);
+            int height = Math.abs(y1 - y2);
+
+            return new Ellipse2D.Float(
+                    x, y, width, height);
+        }
+
+        // Helper function for drawing lines
+        private Line2D.Float drawLine(
+                int x1, int y1, int x2, int y2)
+        {
+
+            return new Line2D.Float(
+                    x1, y1, x2, y2);
+        }
+
+        // Helper function for broke stroke height/width
+        private Ellipse2D.Float drawBrush(
+                int x1, int y1, int brushStrokeWidth, int brushStrokeHeight)
+        {
+
+            return new Ellipse2D.Float(
+                    x1, y1, brushStrokeWidth, brushStrokeHeight);
+
+        }
+
     }
 }
