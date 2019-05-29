@@ -258,14 +258,12 @@ public class GUI extends JFrame {
                         repaint();
 
                     }
-                    if(currentAction == 1) {
+                    if(currentAction == 1){
 
                         int x = e.getX();
                         int y = e.getY();
 
                         Shape aShape = null;
-
-                        // Make stroke and fill equal to eliminate the fact that this is an ellipse
 
                         strokeColor = fillColor;
 
@@ -274,7 +272,7 @@ public class GUI extends JFrame {
                         shapes.add(aShape);
                         shapeFill.add(fillColor);
                         shapeStroke.add(strokeColor);
-                         repaint();
+                        repaint();
                     }
                 }
 
@@ -313,6 +311,18 @@ public class GUI extends JFrame {
 
                     }
 
+                }
+            } );
+
+            this.addMouseMotionListener(new MouseMotionAdapter()
+            {
+
+                public void mouseDragged(MouseEvent e)
+                {
+                    // Get the final x & y position after the mouse is dragged
+
+                    drawEnd = new Point(e.getX(), e.getY());
+                    repaint();
                 }
             } );
         }
