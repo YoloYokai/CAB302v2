@@ -15,6 +15,7 @@ public class GUI extends JFrame {
     // Used to monitor which shape is selected
     int currentAction = 1;
     int currentColour = 1;
+    boolean fill = false;
 
     // Stores drawing rules
     Graphics2D graphSettings;
@@ -173,30 +174,37 @@ public class GUI extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 currentColour = colourNum;
                 if (colourNum == 1){
+                    fill = true;
                     strokeColor = Color.BLACK;
                     fillColor = Color.BLACK;
                 }
                 else if (colourNum == 2){
+                    fill = true;
                     strokeColor = Color.CYAN;
                     fillColor = Color.CYAN;
                 }
                 else if (colourNum == 3){
+                    fill = true;
                     strokeColor = Color.GREEN;
                     fillColor = Color.GREEN;
                 }
                 else if (colourNum == 4){
+                    fill = true;
                     strokeColor = Color.RED;
                     fillColor = Color.RED;
                 }
                 else if (colourNum == 5){
+                    fill = true;
                     strokeColor = Color.MAGENTA;
                     fillColor = Color.MAGENTA;
                 }
                 else if (colourNum == 6){
+                    fill = true;
                     strokeColor = Color.ORANGE;
                     fillColor = Color.ORANGE;
                 }
                 else if (colourNum == 7){
+                    fill = true;
                     strokeColor = Color.YELLOW;
                     fillColor = Color.YELLOW;
                 }
@@ -219,6 +227,7 @@ public class GUI extends JFrame {
                     strokeColor = JColorChooser.showDialog(null, "Choose a Stroke", Color.BLACK);
                 } else {
                     fillColor = JColorChooser.showDialog(null, "Choose a Fill", Color.BLACK);
+                    fill = true;
                 }
             }
         });
@@ -300,8 +309,12 @@ public class GUI extends JFrame {
 
                         // Add shapes, fills and colors to their ArrayLists
                         shapes.add(aShape);
-                        shapeFill.add(fillColor);
                         shapeStroke.add(strokeColor);
+
+                        // Add fill colour if applicable
+                        if (fill == true){
+                            shapeFill.add(fillColor);
+                        }
 
                         // repaint the drawing area
                         drawStart = null;
@@ -351,10 +364,11 @@ public class GUI extends JFrame {
 
                 graphSettings.draw(s);
 
-                // Grabs the next fill from the color arraylist
-                graphSettings.setPaint(fillCounter.next());
-
-                graphSettings.fill(s);
+                if (fill == true){
+                    // Grabs the next fill from the color arraylist
+                    graphSettings.setPaint(fillCounter.next());
+                    graphSettings.fill(s);
+                }
             }
 
             // Guide shape used for drawing
