@@ -3,15 +3,15 @@ package Assignment;
 import javax.swing.*;
 import java.awt.event.*;
 import java.awt.*;
+import java.awt.Graphics;
 import java.awt.geom.*;
 import java.util.*;
-
 
 public class GUI extends JFrame {
     JButton blackBtn, cyanBtn, greenBtn, redBtn, magentaBtn,
             orangeBtn, yellowBtn, plotBtn, lineBtn, rectangleBtn, ellipseBtn,
             polygonBtn, noFillBtn, fillBtn;
-
+    FileParser parser = new FileParser();
     // Used to monitor which shape is selected
     int currentAction = 1;
     int currentColour = 1;
@@ -60,7 +60,7 @@ public class GUI extends JFrame {
         this.setJMenuBar(mb);
 
         // Navigates files via the menu bar
-        FileParser parser = new FileParser();
+
         load.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -244,7 +244,9 @@ public class GUI extends JFrame {
         ArrayList<Shape> shapes = new ArrayList<Shape>();
         ArrayList<Color> shapeFill = new ArrayList<Color>();
         ArrayList<Color> shapeStroke = new ArrayList<Color>();
-
+        ArrayList<Integer> xPoints = new ArrayList<Integer>(); //to store x coordinates
+        ArrayList<Integer> yPoints = new ArrayList<Integer> (); //to store y coordinates
+        int numPoints = 0;
         Point drawStart, drawEnd;
 
         // Monitors events on the drawing area of the frame
@@ -254,11 +256,10 @@ public class GUI extends JFrame {
 
             this.addMouseListener(new MouseAdapter()
             {
+                Shape aShape = null;
 
-                public void mousePressed(MouseEvent e)
-                {
-
-                    if(currentAction != 1){
+                public void mousePressed(MouseEvent e) {
+                    if (currentAction != 1) {
 
                         // When the mouse is pressed get x & y position
 
@@ -266,22 +267,41 @@ public class GUI extends JFrame {
                         drawEnd = drawStart;
                         repaint();
 
-                    }
-                    if(currentAction == 1){
+                        //Draw plot
+                    } else if (currentAction == 1) {
 
                         int x = e.getX();
                         int y = e.getY();
 
-                        Shape aShape = null;
-
                         strokeColor = fillColor;
 
                         aShape = drawLine(x, y, e.getX(), e.getY());
-
+                        ArrayList<Double> coordinates = new ArrayList<>();
+                        //coordinates.add(x);
+                        //coordinates.add(y);
+                        //coordinates.add(e.getX());
+                        //coordinates.add(e.getY());
+                        //new CreationCommand(coordinates, DrawingCommand.DrawCommands.LINE);
                         shapes.add(aShape);
                         shapeFill.add(fillColor);
                         shapeStroke.add(strokeColor);
                         repaint();
+
+                    } else if (currentAction == 5) {
+                        if (e.getButton() == MouseEvent.BUTTON1) {
+                            numPoints++;
+                            xPoints.add(e.getX());
+                            yPoints.add(e.getY());
+                        }
+                        else if (e.getButton() == MouseEvent.BUTTON2) {
+                            if (numPoints > 3) {
+                                aShape = drawPolygon(convertIntegers(xPoints), convertIntegers(yPoints), numPoints);
+                                shapes.add(aShape);
+                                shapeStroke.add(strokeColor);
+                                shapeFill.add(fillColor);
+                                repaint();
+                            }
+                        }
                     }
                 }
 
@@ -302,19 +322,14 @@ public class GUI extends JFrame {
                             // Create a new rectangle using x & y coordinates
                             aShape = drawRectangle(drawStart.x, drawStart.y,
                                     e.getX(), e.getY());
-                        } else if (currentAction == 4){
+                        } else if (currentAction == 4) {
                             aShape = drawEllipse(drawStart.x, drawStart.y,
                                     e.getX(), e.getY());
                         }
-
                         // Add shapes, fills and colors to their ArrayLists
                         shapes.add(aShape);
                         shapeStroke.add(strokeColor);
-
-                        // Add fill colour if applicable
-                        if (fill == true){
-                            shapeFill.add(fillColor);
-                        }
+                        shapeFill.add(fillColor);
 
                         // repaint the drawing area
                         drawStart = null;
@@ -361,7 +376,6 @@ public class GUI extends JFrame {
             {
                 // Grabs the next stroke from the color arraylist
                 graphSettings.setPaint(strokeCounter.next());
-
                 graphSettings.draw(s);
 
                 if (fill == true){
@@ -400,7 +414,11 @@ public class GUI extends JFrame {
                     aShape = drawEllipse(drawStart.x, drawStart.y,
                             drawEnd.x, drawEnd.y);
                 }
-
+                if (currentAction == 5){
+                    aShape = drawLine(drawStart.x, drawStart.y,
+                            drawEnd.x, drawEnd.y);
+                }
+                System.out.println(aShape.toString());
                 graphSettings.draw(aShape);
             }
         }
@@ -432,11 +450,27 @@ public class GUI extends JFrame {
                     x, y, width, height);
         }
 
+        //Helper function for drawing polygons
+        private Polygon drawPolygon(int[] x, int[] y, int numPoints)
+        {
+
+            int[] PolygonX = new int[xPoints.size() - 1];
+            int[] PolygonY = new int[yPoints.size() - 1];
+
+            for (int i = 0; i < numPoints; i++) {
+                PolygonX[i] = xPoints.get(i + 1);
+            }
+            for (int i = 0; i < numPoints; i++) {
+                PolygonY[i] = yPoints.get(i + 1);
+            }
+            return new Polygon(
+                    PolygonX ,PolygonY, numPoints);
+        }
+
         // Helper function for drawing lines
         private Line2D.Float drawLine(
                 int x1, int y1, int x2, int y2)
         {
-
             return new Line2D.Float(
                     x1, y1, x2, y2);
         }
@@ -451,5 +485,15 @@ public class GUI extends JFrame {
 
         }
 
+        // Convert ArrayList to primitive int Array
+        public int[] convertIntegers(ArrayList<Integer> integers)
+        {
+            int[] ret = new int[integers.size()];
+            for (int i=0; i < ret.length; i++)
+            {
+                ret[i] = integers.get(i).intValue();
+            }
+            return ret;
+        }
     }
 }

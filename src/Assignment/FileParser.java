@@ -80,7 +80,9 @@ public class FileParser {
             System.out.println(" ");
         }
     }
-
+    public void addcommand(DrawingCommand a){
+        this.dFile.add(a);
+    }
     public void savefile(ArrayList<DrawingCommand> input) {
         JFileChooser chooser = new JFileChooser(System.getProperty("user.home"));// + "\\Vec");
         FileFilter filter = new FileNameExtensionFilter("vec files", "vec");
