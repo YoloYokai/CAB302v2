@@ -82,23 +82,23 @@ public class GUI extends JFrame {
         JPanel toolPanel = new JPanel();
 
         //Calls a function to create buttons
-        plotBtn = makeButtons("./src/Assignment/plot.png", 1);
-        lineBtn = makeButtons("./src/Assignment/line.png", 2);
-        rectangleBtn = makeButtons("./src/Assignment/rectangle.png", 3);
-        ellipseBtn = makeButtons("./src/Assignment/ellipse.png", 4);
-        polygonBtn = makeButtons("./src/Assignment/polygon.png", 5);
+        plotBtn = makeButtons("./src/Icons/plot.png", 1);
+        lineBtn = makeButtons("./src/Icons/line.png", 2);
+        rectangleBtn = makeButtons("./src/Icons/rectangle.png", 3);
+        ellipseBtn = makeButtons("./src/Icons/ellipse.png", 4);
+        polygonBtn = makeButtons("./src/Icons/polygon.png", 5);
 
-        blackBtn = makeColourButtons("./src/Assignment/black.png", 1 );
-        cyanBtn = makeColourButtons("./src/Assignment/cyan.png", 2 );
-        greenBtn = makeColourButtons("./src/Assignment/green.png", 3);
-        redBtn = makeColourButtons("./src/Assignment/red.png", 4 );
-        magentaBtn = makeColourButtons("./src/Assignment/magenta.png", 5);
-        orangeBtn = makeColourButtons("./src/Assignment/orange.png", 6);
-        yellowBtn = makeColourButtons("./src/Assignment/yellow.png", 7);
+        blackBtn = makeColourButtons("./src/Icons/black.png", 1 );
+        cyanBtn = makeColourButtons("./src/Icons/cyan.png", 2 );
+        greenBtn = makeColourButtons("./src/Icons/green.png", 3);
+        redBtn = makeColourButtons("./src/Icons/red.png", 4 );
+        magentaBtn = makeColourButtons("./src/Icons/magenta.png", 5);
+        orangeBtn = makeColourButtons("./src/Icons/orange.png", 6);
+        yellowBtn = makeColourButtons("./src/Icons/yellow.png", 7);
 
         //Pass true/false value depending on if the shape is being filled in
-        noFillBtn = makeFillButtons("./src/Assignment/nofill.png", 6, true);
-        fillBtn = makeFillButtons("./src/Assignment/fill.png", 7, false);
+        noFillBtn = makeFillButtons("./src/Icons/nofill.png", 6, true);
+        fillBtn = makeFillButtons("./src/Icons/fill.png", 7, false);
 
 
         // Shows the frame
