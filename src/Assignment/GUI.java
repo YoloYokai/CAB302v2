@@ -1,11 +1,13 @@
 package Assignment;
 
 import javax.swing.*;
-import java.awt.event.*;
 import java.awt.*;
-import java.awt.Graphics;
-import java.awt.geom.*;
-import java.util.*;
+import java.awt.event.*;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Line2D;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class GUI extends JFrame {
     JButton blackBtn, cyanBtn, greenBtn, redBtn, magentaBtn,
@@ -225,6 +227,7 @@ public class GUI extends JFrame {
 
                 if (nofill) {
                     strokeColor = JColorChooser.showDialog(null, "Choose a Stroke", Color.BLACK);
+                    fill = false;
                 } else {
                     fillColor = JColorChooser.showDialog(null, "Choose a Fill", Color.BLACK);
                     fill = true;
@@ -243,6 +246,7 @@ public class GUI extends JFrame {
 
         ArrayList<Shape> shapes = new ArrayList<Shape>();
         ArrayList<Color> shapeFill = new ArrayList<Color>();
+        ArrayList<Boolean> shapeFillbool = new ArrayList<>();
         ArrayList<Color> shapeStroke = new ArrayList<Color>();
         ArrayList<Integer> xPoints = new ArrayList<Integer>(); //to store x coordinates
         ArrayList<Integer> yPoints = new ArrayList<Integer> (); //to store y coordinates
@@ -283,6 +287,7 @@ public class GUI extends JFrame {
                         //coordinates.add(e.getY());
                         //new CreationCommand(coordinates, DrawingCommand.DrawCommands.LINE);
                         shapes.add(aShape);
+                        shapeFillbool.add(fill);
                         shapeFill.add(fillColor);
                         shapeStroke.add(strokeColor);
                         repaint();
@@ -298,6 +303,7 @@ public class GUI extends JFrame {
                                 aShape = drawPolygon(convertIntegers(xPoints), convertIntegers(yPoints), numPoints);
                                 shapes.add(aShape);
                                 shapeStroke.add(strokeColor);
+                                shapeFillbool.add(fill);
                                 shapeFill.add(fillColor);
                                 repaint();
                             }
@@ -329,6 +335,7 @@ public class GUI extends JFrame {
                         // Add shapes, fills and colors to their ArrayLists
                         shapes.add(aShape);
                         shapeStroke.add(strokeColor);
+                        shapeFillbool.add(fill);
                         shapeFill.add(fillColor);
 
                         // repaint the drawing area
@@ -371,6 +378,7 @@ public class GUI extends JFrame {
             // Iterators created to cycle through strokes and fills
             Iterator<Color> strokeCounter = shapeStroke.iterator();
             Iterator<Color> fillCounter = shapeFill.iterator();
+            Iterator<Boolean> fill_setting = shapeFillbool.iterator();
 
             for (Shape s : shapes)
             {
@@ -378,10 +386,12 @@ public class GUI extends JFrame {
                 graphSettings.setPaint(strokeCounter.next());
                 graphSettings.draw(s);
 
-                if (fill == true){
+                if (fill_setting.next()) {
                     // Grabs the next fill from the color arraylist
                     graphSettings.setPaint(fillCounter.next());
                     graphSettings.fill(s);
+                } else {
+                    fillCounter.next();
                 }
             }
 
@@ -418,7 +428,6 @@ public class GUI extends JFrame {
                     aShape = drawLine(drawStart.x, drawStart.y,
                             drawEnd.x, drawEnd.y);
                 }
-                System.out.println(aShape.toString());
                 graphSettings.draw(aShape);
             }
         }
