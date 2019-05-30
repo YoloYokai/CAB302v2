@@ -66,7 +66,6 @@ public class FileParser {
         }
         return null;
     }
-
     public void printcmds() {
         for (DrawingCommand a : dFile) {
             System.out.print(a.type().name() + " ");

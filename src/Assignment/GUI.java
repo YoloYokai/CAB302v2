@@ -67,6 +67,7 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 parser.loadfile();
+                fileloader.updateCanvas(graphSettings, parser.getdFile());
             }
         });
         save.addActionListener(new ActionListener() {
@@ -138,7 +139,8 @@ public class GUI extends JFrame {
         this.add(colours, BorderLayout.NORTH);
 
         // Make the drawing area take up the rest of the frame
-        this.add(new Canvas(), BorderLayout.CENTER);
+        Canvas canvas_surface = new Canvas();
+        this.add(canvas_surface, BorderLayout.CENTER);
 
         // Show the frame
         this.setVisible(true);
@@ -383,10 +385,8 @@ public class GUI extends JFrame {
             for (Shape s : shapes)
             {
                 // Grabs the next stroke from the color arraylist
-                Color test = strokeCounter.next();
-                graphSettings.setPaint(test);
+                graphSettings.setPaint(strokeCounter.next());
                 graphSettings.draw(s);
-                System.out.println(test.getColorSpace());
                 if (fill_setting.next()) {
                     // Grabs the next fill from the color arraylist
                     graphSettings.setPaint(fillCounter.next());

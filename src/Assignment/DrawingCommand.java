@@ -15,6 +15,7 @@ public interface DrawingCommand {
         LINE("LINE"),
         RECTANGLE("RECTANGLE"),
         ELLIPSE("ELLIPSE"),
+        POLYGON("POLYGON"),
         PEN("PEN"),
         FILL("FILL"),
         PLOT("PLOT");
@@ -39,7 +40,8 @@ class CreationCommand implements DrawingCommand {
     public CreationCommand(ArrayList<Double> coordinates, DrawCommands type, String cmdstring) {
         this.values = coordinates;
         this.cmdtype = type;
-        this.cmdstring = cmdstring;
+        this.cmdstring = type.toString() + " " + coordinates.toString().replace('[', ' ').replace(',', ' ').replace(']', ' ');
+
     }
 
     public DrawCommands type() {
@@ -56,6 +58,7 @@ class CreationCommand implements DrawingCommand {
 
     public String tostring() {
         return cmdstring;
+
     }
 }
 
@@ -66,8 +69,8 @@ class PropertyCommand implements DrawingCommand {
 
     public PropertyCommand(String propertyin, DrawCommands type, String cmdstring) {
         this.property = propertyin;
-        this.cmdstring = cmdstring;
         this.cmdtype = type;
+        this.cmdstring = type.toString() + " " + propertyin;
     }
 
     public DrawCommands type() {
