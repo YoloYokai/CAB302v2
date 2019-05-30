@@ -32,8 +32,6 @@ public class fileloader {
                 } else {
                     fillcolor = Color.decode(a.property());
                     fill = true;
-                    System.out.println(fillcolor.toString());
-                    System.out.println(fill);
                 }
             }
             if (a.type() == DrawingCommand.DrawCommands.PEN) {
