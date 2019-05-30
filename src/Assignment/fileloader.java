@@ -32,6 +32,8 @@ public class fileloader {
                 } else {
                     fillcolor = Color.decode(a.property());
                     fill = true;
+                    System.out.println(fillcolor.toString());
+                    System.out.println(fill);
                 }
             }
             if (a.type() == DrawingCommand.DrawCommands.PEN) {
@@ -53,9 +55,9 @@ public class fileloader {
             output = new Line2D.Double(positions.get(0) * width, positions.get(1) * height, positions.get(2) * width, positions.get(3) * height);
         } else if (input.type() == DrawingCommand.DrawCommands.ELLIPSE) {
 
-            output = new Ellipse2D.Double(positions.get(0) * width, positions.get(1) * height, (positions.get(0) - positions.get(2)) * width, (positions.get(3) - positions.get(1)) * height);
+            output = new Ellipse2D.Double(positions.get(0) * width, positions.get(1) * height, Math.abs((positions.get(0) - positions.get(2)) * width), Math.abs((positions.get(3) - positions.get(1)) * height));
         } else if (input.type() == DrawingCommand.DrawCommands.RECTANGLE) {
-            output = new Rectangle2D.Double(positions.get(0) * width, positions.get(1) * height, (positions.get(0) - positions.get(2)) * width, (positions.get(3) - positions.get(1)) * height);
+            output = new Rectangle2D.Double(positions.get(0) * width, positions.get(1) * height, Math.abs((positions.get(0) - positions.get(2)) * width), Math.abs((positions.get(3) - positions.get(1)) * height));
         } else if (input.type() == DrawingCommand.DrawCommands.POLYGON) {
             ArrayList<Double> x = new ArrayList<>();
             ArrayList<Double> y = new ArrayList<>();
