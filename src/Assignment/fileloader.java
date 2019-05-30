@@ -3,10 +3,54 @@ package Assignment;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
+import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 public class fileloader {
+    public static ArrayList<DrawingCommand> updatecommands(Graphics2D canvas, ArrayList<drawnShape> shapes) {
+        ArrayList<DrawingCommand> output = new ArrayList<>();
+        boolean fillstate = shapes.get(0).getfillstate();
+        if (fillstate) {
+            output.add(new PropertyCommand("#" + Integer.toHexString(shapes.get(0).getShapeFill().getRGB()).substring(2), DrawingCommand.DrawCommands.FILL));
+        }
+        Color pen = shapes.get(0).getShapeStroke();
+        output.add(new PropertyCommand("#" + Integer.toHexString(shapes.get(0).getShapeFill().getRGB()).substring(2), DrawingCommand.DrawCommands.PEN));
+        Color fill = shapes.get(0).getShapeFill();
+
+        for (drawnShape a : shapes) {
+            if (fillstate && !a.getfillstate()) {
+                output.add(new PropertyCommand("OFF", DrawingCommand.DrawCommands.FILL));
+                fillstate = false;
+            }
+            if (fill != a.getShapeFill()) {
+                output.add(new PropertyCommand("#" + Integer.toHexString(a.getShapeFill().getRGB()).substring(2), DrawingCommand.DrawCommands.FILL));
+                fillstate = true;
+                fill = a.getShapeFill();
+            }
+            if (pen != a.getShapeStroke()) {
+                output.add(new PropertyCommand("#" + Integer.toHexString(a.getShapeStroke().getRGB()).substring(2), DrawingCommand.DrawCommands.PEN));
+                pen = a.getShapeStroke();
+            }
+
+            ArrayList<Double> tmpcoords = new ArrayList<>();
+            PathIterator test = a.getShape().getPathIterator(null);
+
+            if (a.getType() == DrawingCommand.DrawCommands.PLOT) {
+                // output.add(new CreationCommand());
+            } else if (a.getType() == DrawingCommand.DrawCommands.LINE) {
+
+            } else if (a.getType() == DrawingCommand.DrawCommands.ELLIPSE) {
+
+            } else if (a.getType() == DrawingCommand.DrawCommands.RECTANGLE) {
+
+            } else if (a.getType() == DrawingCommand.DrawCommands.POLYGON) {
+
+
+            }
+        }
+        return output;
+    }
     public static ArrayList<drawnShape> updateCanvas(Graphics2D canvas, ArrayList<DrawingCommand> commands) {
         boolean fill = false;
         Color pencolor = new Color(1);
@@ -23,7 +67,7 @@ public class fileloader {
                     canvas.setPaint(fillcolor);
                     canvas.fill(CmdtoShape(a, width, height));
                 }
-                output.add(new drawnShape(CmdtoShape(a, width, height), fillcolor, fill, pencolor));
+                output.add(new drawnShape(CmdtoShape(a, width, height), fillcolor, fill, pencolor, a.type()));
             }
 
             if (a.type() == DrawingCommand.DrawCommands.FILL) {
@@ -37,8 +81,6 @@ public class fileloader {
             if (a.type() == DrawingCommand.DrawCommands.PEN) {
                 pencolor = Color.decode(a.property());
             }
-
-
 
         }
         return output;

@@ -37,7 +37,7 @@ class CreationCommand implements DrawingCommand {
     private DrawCommands cmdtype;
     private String cmdstring;
 
-    public CreationCommand(ArrayList<Double> coordinates, DrawCommands type, String cmdstring) {
+    public CreationCommand(ArrayList<Double> coordinates, DrawCommands type) {
         this.values = coordinates;
         this.cmdtype = type;
         this.cmdstring = type.toString() + " " + coordinates.toString().replace('[', ' ').replace(',', ' ').replace(']', ' ');
@@ -67,7 +67,7 @@ class PropertyCommand implements DrawingCommand {
     private DrawCommands cmdtype;
     private String cmdstring;
 
-    public PropertyCommand(String propertyin, DrawCommands type, String cmdstring) {
+    public PropertyCommand(String propertyin, DrawCommands type) {
         this.property = propertyin;
         this.cmdtype = type;
         this.cmdstring = type.toString() + " " + propertyin;

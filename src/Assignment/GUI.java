@@ -73,7 +73,7 @@ public class GUI extends JFrame {
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                parser.savefile(parser.getdFile());
+                parser.savefile(fileloader.updatecommands(graphSettings, shapes));
 
             }
         });
@@ -283,7 +283,7 @@ public class GUI extends JFrame {
                         //coordinates.add(e.getX());
                         //coordinates.add(e.getY());
                         //new CreationCommand(coordinates, DrawingCommand.DrawCommands.LINE);
-                        shapes.add(new drawnShape(aShape, fillColor, fill, strokeColor));
+                        shapes.add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.LINE));
                         repaint();
 
                     } else if (currentAction == 5) {
@@ -295,7 +295,7 @@ public class GUI extends JFrame {
                         else if (e.getButton() == MouseEvent.BUTTON2) {
                             if (numPoints > 3) {
                                 aShape = drawPolygon(convertIntegers(xPoints), convertIntegers(yPoints), numPoints);
-                                shapes.add(new drawnShape(aShape, fillColor, fill, strokeColor));
+                                shapes.add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.POLYGON));
                                 repaint();
                             }
                         }
@@ -311,20 +311,23 @@ public class GUI extends JFrame {
                         // and finishing x & y positions
 
                         Shape aShape = null;
-
+                        DrawingCommand.DrawCommands tmp = null;
                         if (currentAction == 2){
                             aShape = drawLine(drawStart.x, drawStart.y,
                                     e.getX(), e.getY());
+                            tmp = DrawingCommand.DrawCommands.LINE;
                         } else if (currentAction == 3) {
                             // Create a new rectangle using x & y coordinates
                             aShape = drawRectangle(drawStart.x, drawStart.y,
                                     e.getX(), e.getY());
+                            tmp = DrawingCommand.DrawCommands.RECTANGLE;
                         } else if (currentAction == 4) {
                             aShape = drawEllipse(drawStart.x, drawStart.y,
                                     e.getX(), e.getY());
+                            tmp = DrawingCommand.DrawCommands.ELLIPSE;
                         }
                         // Add shapes, fills and colors to their ArrayLists
-                        shapes.add(new drawnShape(aShape, fillColor, fill, strokeColor));
+                        shapes.add(new drawnShape(aShape, fillColor, fill, strokeColor, tmp));
 
                         // repaint the drawing area
                         drawStart = null;
@@ -368,11 +371,11 @@ public class GUI extends JFrame {
             {
                 // Grabs the next stroke from the color arraylist
                 graphSettings.setPaint(s.getShapeStroke());
-                graphSettings.draw(s.getshape());
+                graphSettings.draw(s.getShape());
                 if (s.getfillstate()) {
                     // Grabs the next fill from the color arraylist
                     graphSettings.setPaint(s.getShapeFill());
-                    graphSettings.fill(s.getshape());
+                    graphSettings.fill(s.getShape());
                 }
             }
 

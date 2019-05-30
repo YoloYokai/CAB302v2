@@ -47,17 +47,17 @@ public class FileParser {
                     }
                 }
                 if (commands.get(i).contains(DrawingCommand.DrawCommands.LINE.cmd())) {
-                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.LINE, commands.get(i)));
+                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.LINE));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.RECTANGLE.cmd())) {
-                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.RECTANGLE, commands.get(i)));
+                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.RECTANGLE));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.ELLIPSE.cmd())) {
-                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.ELLIPSE, commands.get(i)));
+                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.ELLIPSE));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.PLOT.cmd())) {
-                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.PLOT, commands.get(i)));
+                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.PLOT));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.PEN.cmd())) {
-                    dFile.add(new PropertyCommand(properties, DrawingCommand.DrawCommands.PEN, commands.get(i)));
+                    dFile.add(new PropertyCommand(properties, DrawingCommand.DrawCommands.PEN));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.FILL.cmd())) {
-                    dFile.add(new PropertyCommand(properties, DrawingCommand.DrawCommands.FILL, commands.get(i)));
+                    dFile.add(new PropertyCommand(properties, DrawingCommand.DrawCommands.FILL));
                 }
 
             }
