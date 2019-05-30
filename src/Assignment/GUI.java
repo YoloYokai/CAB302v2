@@ -7,7 +7,6 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class GUI extends JFrame {
     JButton blackBtn, cyanBtn, greenBtn, redBtn, magentaBtn,
@@ -24,6 +23,7 @@ public class GUI extends JFrame {
 
     // Default stroke and fill colours
     Color strokeColor = Color.BLACK, fillColor = Color.BLACK;
+    ArrayList<drawnShape> shapes = new ArrayList<>();
 
     public static void main(String[] args) {
         new GUI();
@@ -67,7 +67,7 @@ public class GUI extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 parser.loadfile();
-                fileloader.updateCanvas(graphSettings, parser.getdFile());
+                shapes = fileloader.updateCanvas(graphSettings, parser.getdFile());
             }
         });
         save.addActionListener(new ActionListener() {
@@ -245,11 +245,6 @@ public class GUI extends JFrame {
 
         // ArrayLists that contain each shape drawn along with
         // that shapes stroke and fill
-
-        ArrayList<Shape> shapes = new ArrayList<Shape>();
-        ArrayList<Color> shapeFill = new ArrayList<Color>();
-        ArrayList<Boolean> shapeFillbool = new ArrayList<>();
-        ArrayList<Color> shapeStroke = new ArrayList<Color>();
         ArrayList<Integer> xPoints = new ArrayList<Integer>(); //to store x coordinates
         ArrayList<Integer> yPoints = new ArrayList<Integer> (); //to store y coordinates
         int numPoints = 0;
@@ -288,10 +283,7 @@ public class GUI extends JFrame {
                         //coordinates.add(e.getX());
                         //coordinates.add(e.getY());
                         //new CreationCommand(coordinates, DrawingCommand.DrawCommands.LINE);
-                        shapes.add(aShape);
-                        shapeFillbool.add(fill);
-                        shapeFill.add(fillColor);
-                        shapeStroke.add(strokeColor);
+                        shapes.add(new drawnShape(aShape, fillColor, fill, strokeColor));
                         repaint();
 
                     } else if (currentAction == 5) {
@@ -303,10 +295,7 @@ public class GUI extends JFrame {
                         else if (e.getButton() == MouseEvent.BUTTON2) {
                             if (numPoints > 3) {
                                 aShape = drawPolygon(convertIntegers(xPoints), convertIntegers(yPoints), numPoints);
-                                shapes.add(aShape);
-                                shapeStroke.add(strokeColor);
-                                shapeFillbool.add(fill);
-                                shapeFill.add(fillColor);
+                                shapes.add(new drawnShape(aShape, fillColor, fill, strokeColor));
                                 repaint();
                             }
                         }
@@ -335,10 +324,7 @@ public class GUI extends JFrame {
                                     e.getX(), e.getY());
                         }
                         // Add shapes, fills and colors to their ArrayLists
-                        shapes.add(aShape);
-                        shapeStroke.add(strokeColor);
-                        shapeFillbool.add(fill);
-                        shapeFill.add(fillColor);
+                        shapes.add(new drawnShape(aShape, fillColor, fill, strokeColor));
 
                         // repaint the drawing area
                         drawStart = null;
@@ -378,21 +364,15 @@ public class GUI extends JFrame {
             graphSettings.setStroke(new BasicStroke(4));
 
             // Iterators created to cycle through strokes and fills
-            Iterator<Color> strokeCounter = shapeStroke.iterator();
-            Iterator<Color> fillCounter = shapeFill.iterator();
-            Iterator<Boolean> fill_setting = shapeFillbool.iterator();
-
-            for (Shape s : shapes)
+            for (drawnShape s : shapes)
             {
                 // Grabs the next stroke from the color arraylist
-                graphSettings.setPaint(strokeCounter.next());
-                graphSettings.draw(s);
-                if (fill_setting.next()) {
+                graphSettings.setPaint(s.getShapeStroke());
+                graphSettings.draw(s.getshape());
+                if (s.getfillstate()) {
                     // Grabs the next fill from the color arraylist
-                    graphSettings.setPaint(fillCounter.next());
-                    graphSettings.fill(s);
-                } else {
-                    fillCounter.next();
+                    graphSettings.setPaint(s.getShapeFill());
+                    graphSettings.fill(s.getshape());
                 }
             }
 
