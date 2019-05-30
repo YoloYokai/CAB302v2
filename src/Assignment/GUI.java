@@ -383,9 +383,10 @@ public class GUI extends JFrame {
             for (Shape s : shapes)
             {
                 // Grabs the next stroke from the color arraylist
-                graphSettings.setPaint(strokeCounter.next());
+                Color test = strokeCounter.next();
+                graphSettings.setPaint(test);
                 graphSettings.draw(s);
-
+                System.out.println(test.getColorSpace());
                 if (fill_setting.next()) {
                     // Grabs the next fill from the color arraylist
                     graphSettings.setPaint(fillCounter.next());
