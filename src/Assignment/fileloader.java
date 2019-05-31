@@ -10,6 +10,9 @@ import java.util.ArrayList;
 public class fileloader {
     public static ArrayList<DrawingCommand> updatecommands(Graphics2D canvas, ArrayList<drawnShape> shapes) {
         ArrayList<DrawingCommand> output = new ArrayList<>();
+        double width = canvas.getClip().getBounds().getWidth();
+        double height = canvas.getClip().getBounds().getHeight();
+
         boolean fillstate = shapes.get(0).getfillstate();
         if (fillstate) {
             output.add(new PropertyCommand("#" + Integer.toHexString(shapes.get(0).getShapeFill().getRGB()).substring(2), DrawingCommand.DrawCommands.FILL));
@@ -19,6 +22,7 @@ public class fileloader {
         Color fill = shapes.get(0).getShapeFill();
 
         for (drawnShape a : shapes) {
+
             if (fillstate && !a.getfillstate()) {
                 output.add(new PropertyCommand("OFF", DrawingCommand.DrawCommands.FILL));
                 fillstate = false;
@@ -34,19 +38,21 @@ public class fileloader {
             }
 
             ArrayList<Double> tmpcoords = new ArrayList<>();
-            PathIterator test = a.getShape().getPathIterator(null);
-
+            for (int i =0; i<a.getPos().size();i+=2){
+                tmpcoords.add(Math.round ((a.getPos().get(i)/width) * 1000000.0) / 1000000.0);
+                tmpcoords.add(Math.round ((a.getPos().get(i+1)/height) * 1000000.0) / 1000000.0);
+            }
+            System.out.println(tmpcoords);
             if (a.getType() == DrawingCommand.DrawCommands.PLOT) {
-                // output.add(new CreationCommand());
+                output.add(new CreationCommand(tmpcoords,DrawingCommand.DrawCommands.PLOT));
             } else if (a.getType() == DrawingCommand.DrawCommands.LINE) {
-
+                output.add(new CreationCommand(tmpcoords,DrawingCommand.DrawCommands.LINE));
             } else if (a.getType() == DrawingCommand.DrawCommands.ELLIPSE) {
-
+                output.add(new CreationCommand(tmpcoords,DrawingCommand.DrawCommands.ELLIPSE));
             } else if (a.getType() == DrawingCommand.DrawCommands.RECTANGLE) {
-
+                output.add(new CreationCommand(tmpcoords,DrawingCommand.DrawCommands.RECTANGLE));
             } else if (a.getType() == DrawingCommand.DrawCommands.POLYGON) {
-
-
+                output.add(new CreationCommand(tmpcoords,DrawingCommand.DrawCommands.POLYGON));
             }
         }
         return output;
@@ -67,7 +73,7 @@ public class fileloader {
                     canvas.setPaint(fillcolor);
                     canvas.fill(CmdtoShape(a, width, height));
                 }
-                output.add(new drawnShape(CmdtoShape(a, width, height), fillcolor, fill, pencolor, a.type()));
+                output.add(new drawnShape(CmdtoShape(a, width, height), fillcolor, fill, pencolor, a.type(),Cmdcoords(a)));
             }
 
             if (a.type() == DrawingCommand.DrawCommands.FILL) {
@@ -119,5 +125,8 @@ public class fileloader {
         }
 
         return output;
+    }
+    private static ArrayList<Double> Cmdcoords(DrawingCommand input){
+        return input.coordinates();
     }
 }
