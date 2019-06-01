@@ -421,8 +421,8 @@ public class GUI extends JFrame {
             graphSettings.setStroke(new BasicStroke(4));
 
             // Iterators created to cycle through strokes and fills
-            if (files.get(currentfile).size() != 0) {
-                for (drawnShape s : files.get(currentfile)) {
+
+            for (drawnShape s : files.get(currentfile)) {
                     // Grabs the next stroke from the color arraylist
                     graphSettings.setPaint(s.getShapeStroke());
                     graphSettings.draw(s.getShape());
@@ -463,7 +463,7 @@ public class GUI extends JFrame {
                     }
                     graphSettings.draw(aShape);
                 }
-            }
+
         }
 
         // Helper function for drawing the rectangle correctly
