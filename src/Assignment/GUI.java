@@ -1,13 +1,14 @@
 package Assignment;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import javax.swing.JOptionPane;
 
 public class GUI extends JFrame {
     JButton blackBtn, cyanBtn, greenBtn, redBtn, magentaBtn,
@@ -17,6 +18,8 @@ public class GUI extends JFrame {
     // Used to monitor which shape is selected
     int currentAction = 1;
     int currentColour = 1;
+    int currentfile = 0;
+    int filecount = 1;
     boolean fill = false;
 
     // Stores drawing rules
@@ -24,7 +27,7 @@ public class GUI extends JFrame {
 
     // Default stroke and fill colours
     Color strokeColor = Color.BLACK, fillColor = Color.BLACK;
-    ArrayList<drawnShape> shapes = new ArrayList<>();
+    ArrayList<ArrayList<drawnShape>> files = new ArrayList<>();
 
     public static void main(String[] args) {
         new GUI();
@@ -32,8 +35,10 @@ public class GUI extends JFrame {
 
     // Defines JFrame default settings
     public GUI() {
+
         // Default window width and height
         this.setSize(800, 600);
+
 
         // Sets window title to application name
         this.setTitle("Sketchy");
@@ -43,50 +48,39 @@ public class GUI extends JFrame {
 
         // Adds menu bar and items
         JMenuBar mb=new JMenuBar();
-        JMenu file, edit, help;
-        JMenuItem save, load, undo, coordinates;
+        JMenu file, edit;
+        JMenuItem save, load, undo, newfile, closefile;
 
         file=new JMenu("File");
+
         edit=new JMenu("Edit");
-        help=new JMenu("Help");
+        closefile = new JMenuItem("Close File");
+        newfile = new JMenuItem("New File");
         save=new JMenuItem("Save");
         load=new JMenuItem("Load");
         undo=new JMenuItem("Undo");
-        coordinates=new JMenuItem("Enter Coordinates");
-
+        file.add(closefile);
+        file.add(newfile);
         file.add(save);
         file.add(load);
         edit.add(undo);
-        help.add(coordinates);
         mb.add(file);
         mb.add(edit);
-        mb.add(help);
 
         this.setJMenuBar(mb);
-
-        coordinates.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JTextField xCor = new JTextField();
-                JTextField yCor = new JTextField();
-                Object[] fields = {"Enter X Coordinate:", xCor, "Enter Y Coordinate:", yCor};
-                JOptionPane.showConfirmDialog(null, fields, "Enter Coordinates", JOptionPane.WARNING_MESSAGE);
-            }
-        });
-
         // Navigates files via the menu bar
 
-        load.addActionListener(new ActionListener() {
-            @Override
+
+        undo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                parser.loadfile();
-                shapes = fileloader.updateCanvas(graphSettings, parser.getdFile());
+
+                files.get(currentfile).remove(files.get(currentfile).size() - 1);
+                repaint();
             }
         });
         save.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
-                parser.savefile(fileloader.updatecommands(graphSettings, shapes));
+                parser.savefile(fileloader.updatecommands(graphSettings, files.get(currentfile)));
 
             }
         });
@@ -149,11 +143,40 @@ public class GUI extends JFrame {
 
 
         // Add to top of content pane
+        JTabbedPane tabbedPane = new JTabbedPane();
+        tabbedPane.add("file " + filecount, new Canvas());
+        files.add(new ArrayList<drawnShape>());
+        tabbedPane.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                currentfile = tabbedPane.getSelectedIndex();
+            }
+        });
+        load.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ++filecount;
+                tabbedPane.add("file" + filecount, new Canvas());
+                parser.loadfile();
+                files.add(fileloader.updateCanvas(graphSettings, parser.getdFile()));
+            }
+        });
+        newfile.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                ++filecount;
+                tabbedPane.add("file" + filecount, new Canvas());
+                files.add(new ArrayList<>());
+            }
+        });
+        closefile.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                tabbedPane.remove(tabbedPane.getSelectedIndex());
+                files.remove(files.get(currentfile));
+            }
+        });
         this.add(colours, BorderLayout.NORTH);
+        this.add(tabbedPane);
 
         // Make the drawing area take up the rest of the frame
-        Canvas canvas_surface = new Canvas();
-        this.add(canvas_surface, BorderLayout.CENTER);
+
 
         // Show the frame
         this.setVisible(true);
@@ -177,7 +200,6 @@ public class GUI extends JFrame {
 
         return aButton;
     }
-
     // Produces colour buttons with supplied images as icons
     public JButton makeColourButtons(String iconFile, final int colourNum) {
         JButton aButton = new JButton();
@@ -253,11 +275,11 @@ public class GUI extends JFrame {
         return aButton;
     }
 
-    private class Canvas extends JComponent
-    {
+    private class Canvas extends JComponent {
 
         // ArrayLists that contain each shape drawn along with
         // that shapes stroke and fill
+        //shapes = //file_memory.get(super.GUI.currenttab)
         ArrayList<Double> coordlist = new ArrayList<>();
         ArrayList<Integer> xPoints = new ArrayList<Integer>(); //to store x coordinates
         ArrayList<Integer> yPoints = new ArrayList<Integer> (); //to store y coordinates
@@ -266,11 +288,9 @@ public class GUI extends JFrame {
 
         // Monitors events on the drawing area of the frame
 
-        public Canvas()
-        {
+        public Canvas() {
 
-            this.addMouseListener(new MouseAdapter()
-            {
+            this.addMouseListener(new MouseAdapter() {
                 Shape aShape = null;
 
                 public void mousePressed(MouseEvent e) {
@@ -297,7 +317,7 @@ public class GUI extends JFrame {
                         coordlist.add((double)y);
                         coordlist.add((double)e.getX());
                         coordlist.add((double)e.getY());
-                        shapes.add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.LINE,coordlist));
+                        files.get(currentfile).add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.LINE, coordlist));
                         repaint();
 
                     } else if (currentAction == 5) {
@@ -309,11 +329,10 @@ public class GUI extends JFrame {
                             xPoints.add(e.getX());
                             yPoints.add(e.getY());
                             System.out.println(yPoints);
-                        }
-                        else if (e.getButton() == MouseEvent.BUTTON3) {
+                        } else if (e.getButton() == MouseEvent.BUTTON3) {
                             if (numPoints > 3) {
                                 aShape = drawPolygon(convertIntegers(xPoints), convertIntegers(yPoints), numPoints);
-                                shapes.add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.POLYGON,coordlist));
+                                files.get(currentfile).add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.POLYGON, coordlist));
                                 xPoints.clear();
                                 yPoints.clear();
                                 coordlist.clear();
@@ -324,8 +343,7 @@ public class GUI extends JFrame {
                     }
                 }
 
-                public void mouseReleased(MouseEvent e)
-                {
+                public void mouseReleased(MouseEvent e) {
 
                     if(currentAction != 1){
 
@@ -366,7 +384,7 @@ public class GUI extends JFrame {
                             tmptype = DrawingCommand.DrawCommands.ELLIPSE;
                         }
                         if(currentAction!=5) {
-                            shapes.add(new drawnShape(aShape, fillColor, fill, strokeColor, tmptype, tempcoords));
+                            files.get(currentfile).add(new drawnShape(aShape, fillColor, fill, strokeColor, tmptype, tempcoords));
                         }
                         // repaint the drawing area
                         drawStart = null;
@@ -379,11 +397,9 @@ public class GUI extends JFrame {
                 }
             } );
 
-            this.addMouseMotionListener(new MouseMotionAdapter()
-            {
+            this.addMouseMotionListener(new MouseMotionAdapter() {
 
-                public void mouseDragged(MouseEvent e)
-                {
+                public void mouseDragged(MouseEvent e) {
                     // Get the final x & y position after the mouse is dragged
 
                     drawEnd = new Point(e.getX(), e.getY());
@@ -393,8 +409,7 @@ public class GUI extends JFrame {
         }
 
 
-        public void paint(Graphics g)
-        {
+        public void paint(Graphics g) {
             // Class used to define the shapes to be drawn
             graphSettings = (Graphics2D)g;
 
@@ -406,59 +421,54 @@ public class GUI extends JFrame {
             graphSettings.setStroke(new BasicStroke(4));
 
             // Iterators created to cycle through strokes and fills
-            for (drawnShape s : shapes)
-            {
-                // Grabs the next stroke from the color arraylist
-                graphSettings.setPaint(s.getShapeStroke());
-                graphSettings.draw(s.getShape());
-                if (s.getfillstate()) {
-                    // Grabs the next fill from the color arraylist
-                    graphSettings.setPaint(s.getShapeFill());
-                    graphSettings.fill(s.getShape());
+            if (files.get(currentfile).size() != 0) {
+                for (drawnShape s : files.get(currentfile)) {
+                    // Grabs the next stroke from the color arraylist
+                    graphSettings.setPaint(s.getShapeStroke());
+                    graphSettings.draw(s.getShape());
+                    if (s.getfillstate()) {
+                        // Grabs the next fill from the color arraylist
+                        graphSettings.setPaint(s.getShapeFill());
+                        graphSettings.fill(s.getShape());
+                    }
                 }
-            }
 
-            // Guide shape used for drawing
-            if (drawStart != null && drawEnd != null)
-            {
-                // Makes the guide shape transparent and gray
-                graphSettings.setComposite(AlphaComposite.getInstance(
-                        AlphaComposite.SRC_OVER, 0.40f));
-                graphSettings.setPaint(Color.LIGHT_GRAY);
+                // Guide shape used for drawing
+                if (drawStart != null && drawEnd != null) {
+                    // Makes the guide shape transparent and gray
+                    graphSettings.setComposite(AlphaComposite.getInstance(
+                            AlphaComposite.SRC_OVER, 0.40f));
+                    graphSettings.setPaint(Color.LIGHT_GRAY);
 
-                Shape aShape = null;
+                    Shape aShape = null;
 
-                if (currentAction == 2){
-                    // Create a new line using x & y coordinates
-                    aShape = drawLine(drawStart.x, drawStart.y,
-                            drawEnd.x, drawEnd.y);
-                } else
+                    if (currentAction == 2){
+                        // Create a new line using x & y coordinates
+                        aShape = drawLine(drawStart.x, drawStart.y,
+                                drawEnd.x, drawEnd.y);
+                    } else if (currentAction == 3){
+                        // Create a new rectangle using x & y coordinates
 
-                if (currentAction == 3){
-                    // Create a new rectangle using x & y coordinates
+                        aShape = drawRectangle(drawStart.x, drawStart.y,
+                                drawEnd.x, drawEnd.y);
+                    } else if (currentAction == 4) {
 
-                    aShape = drawRectangle(drawStart.x, drawStart.y,
-                            drawEnd.x, drawEnd.y);
-                } else
-
-                if (currentAction == 4) {
-
-                    // Create a new ellipse using x & y coordinates
-                    aShape = drawEllipse(drawStart.x, drawStart.y,
-                            drawEnd.x, drawEnd.y);
+                        // Create a new ellipse using x & y coordinates
+                        aShape = drawEllipse(drawStart.x, drawStart.y,
+                                drawEnd.x, drawEnd.y);
+                    }
+                    if (currentAction == 5){
+                        aShape = drawLine(drawStart.x, drawStart.y,
+                                drawEnd.x, drawEnd.y);
+                    }
+                    graphSettings.draw(aShape);
                 }
-                if (currentAction == 5){
-                    aShape = drawLine(drawStart.x, drawStart.y,
-                            drawEnd.x, drawEnd.y);
-                }
-                graphSettings.draw(aShape);
             }
         }
 
         // Helper function for drawing the rectangle correctly
         private Rectangle2D.Float drawRectangle(
-                int x1, int y1, int x2, int y2)
-        {
+                int x1, int y1, int x2, int y2) {
             int x = Math.min(x1, x2);
             int y = Math.min(y1, y2);
 
@@ -470,8 +480,7 @@ public class GUI extends JFrame {
         }
 
         // Helper function for drawing the ellipse correctly
-        private Ellipse2D.Float drawEllipse(int x1, int y1, int x2, int y2)
-        {
+        private Ellipse2D.Float drawEllipse(int x1, int y1, int x2, int y2) {
 
             int x = Math.min(x1, x2);
             int y = Math.min(y1, y2);
@@ -483,8 +492,7 @@ public class GUI extends JFrame {
         }
 
         //Helper function for drawing polygons
-        private Polygon drawPolygon(int[] x, int[] y, int numPoints)
-        {
+        private Polygon drawPolygon(int[] x, int[] y, int numPoints) {
 
             int[] PolygonX = new int[xPoints.size()];
             int[] PolygonY = new int[yPoints.size()];
@@ -501,16 +509,14 @@ public class GUI extends JFrame {
 
         // Helper function for drawing lines
         private Line2D.Float drawLine(
-                int x1, int y1, int x2, int y2)
-        {
+                int x1, int y1, int x2, int y2) {
             return new Line2D.Float(
                     x1, y1, x2, y2);
         }
 
         // Helper function for broke stroke height/width
         private Ellipse2D.Float drawBrush(
-                int x1, int y1, int brushStrokeWidth, int brushStrokeHeight)
-        {
+                int x1, int y1, int brushStrokeWidth, int brushStrokeHeight) {
 
             return new Ellipse2D.Float(
                     x1, y1, brushStrokeWidth, brushStrokeHeight);
@@ -518,14 +524,28 @@ public class GUI extends JFrame {
         }
 
         // Convert ArrayList to primitive int Array
-        public int[] convertIntegers(ArrayList<Integer> integers)
-        {
+        public int[] convertIntegers(ArrayList<Integer> integers) {
             int[] ret = new int[integers.size()];
-            for (int i=0; i < ret.length; i++)
-            {
+            for (int i = 0; i < ret.length; i++) {
                 ret[i] = integers.get(i).intValue();
             }
             return ret;
+        }
+    }
+
+    class MyCloseButton extends JButton {
+        public MyCloseButton() {
+            super("x");
+            setBorder(BorderFactory.createEmptyBorder());
+            setFocusPainted(false);
+            setBorderPainted(false);
+            setContentAreaFilled(false);
+            setRolloverEnabled(false);
+        }
+
+        @Override
+        public Dimension getPreferredSize() {
+            return new Dimension(16, 16);
         }
     }
 }
