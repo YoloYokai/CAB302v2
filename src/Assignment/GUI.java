@@ -7,6 +7,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 
 public class GUI extends JFrame {
     JButton blackBtn, cyanBtn, greenBtn, redBtn, magentaBtn,
@@ -43,7 +44,7 @@ public class GUI extends JFrame {
         // Adds menu bar and items
         JMenuBar mb=new JMenuBar();
         JMenu file, edit, help;
-        JMenuItem save, load, undo;
+        JMenuItem save, load, undo, coordinates;
 
         file=new JMenu("File");
         edit=new JMenu("Edit");
@@ -51,15 +52,27 @@ public class GUI extends JFrame {
         save=new JMenuItem("Save");
         load=new JMenuItem("Load");
         undo=new JMenuItem("Undo");
+        coordinates=new JMenuItem("Enter Coordinates");
 
         file.add(save);
         file.add(load);
         edit.add(undo);
+        help.add(coordinates);
         mb.add(file);
         mb.add(edit);
         mb.add(help);
 
         this.setJMenuBar(mb);
+
+        coordinates.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JTextField xCor = new JTextField();
+                JTextField yCor = new JTextField();
+                Object[] fields = {"Enter X Coordinate:", xCor, "Enter Y Coordinate:", yCor};
+                JOptionPane.showConfirmDialog(null, fields, "Enter Coordinates", JOptionPane.WARNING_MESSAGE);
+            }
+        });
 
         // Navigates files via the menu bar
 
