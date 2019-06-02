@@ -10,6 +10,8 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
+import static java.awt.Color.white;
+
 public class GUI extends JFrame {
     JButton blackBtn, cyanBtn, greenBtn, redBtn, magentaBtn,
             orangeBtn, yellowBtn, plotBtn, lineBtn, rectangleBtn, ellipseBtn,
@@ -35,7 +37,6 @@ public class GUI extends JFrame {
 
     // Defines JFrame default settings
     public GUI() {
-
         // Default window width and height
         this.setSize(800, 600);
 
@@ -172,12 +173,8 @@ public class GUI extends JFrame {
                 files.remove(files.get(currentfile));
             }
         });
-        this.add(colours, BorderLayout.NORTH);
         this.add(tabbedPane);
-
-        // Make the drawing area take up the rest of the frame
-
-
+        this.add(colours, BorderLayout.NORTH);
         // Show the frame
         this.setVisible(true);
     }
@@ -276,7 +273,6 @@ public class GUI extends JFrame {
     }
 
     private class Canvas extends JComponent {
-
         // ArrayLists that contain each shape drawn along with
         // that shapes stroke and fill
         //shapes = //file_memory.get(super.GUI.currenttab)
@@ -315,9 +311,7 @@ public class GUI extends JFrame {
                         aShape = drawLine(x, y, e.getX(), e.getY());
                         coordlist.add((double)x);
                         coordlist.add((double)y);
-                        coordlist.add((double)e.getX());
-                        coordlist.add((double)e.getY());
-                        files.get(currentfile).add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.LINE, coordlist));
+                        files.get(currentfile).add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.PLOT, coordlist));
                         repaint();
 
                     } else if (currentAction == 5) {
@@ -328,7 +322,6 @@ public class GUI extends JFrame {
                             coordlist.add((double)e.getY());
                             xPoints.add(e.getX());
                             yPoints.add(e.getY());
-                            System.out.println(yPoints);
                         } else if (e.getButton() == MouseEvent.BUTTON3) {
                             if (numPoints > 3) {
                                 aShape = drawPolygon(convertIntegers(xPoints), convertIntegers(yPoints), numPoints);

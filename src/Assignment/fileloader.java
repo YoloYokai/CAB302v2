@@ -42,8 +42,8 @@ public class fileloader {
                 tmpcoords.add(Math.round ((a.getPos().get(i)/width) * 1000000.0) / 1000000.0);
                 tmpcoords.add(Math.round ((a.getPos().get(i+1)/height) * 1000000.0) / 1000000.0);
             }
-            System.out.println(tmpcoords);
             if (a.getType() == DrawingCommand.DrawCommands.PLOT) {
+                System.out.println(tmpcoords);
                 output.add(new CreationCommand(tmpcoords,DrawingCommand.DrawCommands.PLOT));
             } else if (a.getType() == DrawingCommand.DrawCommands.LINE) {
                 output.add(new CreationCommand(tmpcoords,DrawingCommand.DrawCommands.LINE));
@@ -52,6 +52,7 @@ public class fileloader {
             } else if (a.getType() == DrawingCommand.DrawCommands.RECTANGLE) {
                 output.add(new CreationCommand(tmpcoords,DrawingCommand.DrawCommands.RECTANGLE));
             } else if (a.getType() == DrawingCommand.DrawCommands.POLYGON) {
+                System.out.println(tmpcoords);
                 output.add(new CreationCommand(tmpcoords,DrawingCommand.DrawCommands.POLYGON));
             }
         }
