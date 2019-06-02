@@ -335,8 +335,6 @@ public class GUI extends JFrame {
                         }
                         if (e.getButton() == MouseEvent.BUTTON1) {
                             numPoints++;
-                            coordlist.add((double)e.getX());
-                            coordlist.add((double)e.getY());
                             xPoints.add(e.getX());
                             yPoints.add(e.getY());
                         } else if (e.getButton() == MouseEvent.BUTTON3) {
@@ -347,9 +345,9 @@ public class GUI extends JFrame {
                                     tempcoords.add((double) yPoints.get(i));
                                 }
                                 aShape = drawPolygon(convertIntegers(xPoints), convertIntegers(yPoints), numPoints);
-                                files.get(currentfile).add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.POLYGON, coordlist));
-                                ArrayList<Integer> xPoints = new ArrayList<Integer>(); //to store x coordinates
-                                ArrayList<Integer> yPoints = new ArrayList<Integer>(); //to store y coordinates
+                                files.get(currentfile).add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.POLYGON, tempcoords));
+                                xPoints.clear();
+                                yPoints.clear();
                                 numPoints=0;
                                 repaint();
                             }
