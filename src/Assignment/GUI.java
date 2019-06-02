@@ -142,6 +142,7 @@ public class GUI extends JFrame {
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("file " + filecount, new Canvas());
         files.add(new ArrayList<drawnShape>());
+
         tabbedPane.addChangeListener(new ChangeListener() {
             public void stateChanged(ChangeEvent e) {
                 currentfile = tabbedPane.getSelectedIndex();
@@ -270,7 +271,6 @@ public class GUI extends JFrame {
     private class Canvas extends JComponent {
         // ArrayLists that contain each shape drawn along with
         // that shapes stroke and fill
-        //shapes = //file_memory.get(super.GUI.currenttab)
         ArrayList<Double> coordlist = new ArrayList<>();
         ArrayList<Integer> xPoints = new ArrayList<Integer>(); //to store x coordinates
         ArrayList<Integer> yPoints = new ArrayList<Integer> (); //to store y coordinates
