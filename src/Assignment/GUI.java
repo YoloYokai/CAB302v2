@@ -10,10 +10,15 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
+
 public class GUI extends JFrame {
+
     private JButton blackBtn, cyanBtn, greenBtn, redBtn, magentaBtn,
             orangeBtn, yellowBtn, plotBtn, lineBtn, rectangleBtn, ellipseBtn,
             polygonBtn, noFillBtn, fillBtn;
+
+
+
     private FileParser parser = new FileParser();
     // Used to monitor which shape is selected
     private int currentAction = 1, currentColour = 1, currentfile = 0, filecount = 1;
@@ -29,7 +34,6 @@ public class GUI extends JFrame {
     public static void main(String[] args) {
         new GUI();
     }
-
     // Defines JFrame default settings
     public GUI() {
         // Default window width and height
@@ -48,7 +52,6 @@ public class GUI extends JFrame {
         JMenuItem save, load, undo, newfile, closefile;
 
         file=new JMenu("File");
-
         edit=new JMenu("Edit");
         closefile = new JMenuItem("Close File");
         newfile = new JMenuItem("New File");
@@ -138,7 +141,7 @@ public class GUI extends JFrame {
         colours.add(greenBtn);
 
 
-        // Add to top of content pane
+        //Have files open as individual tabs
         JTabbedPane tabbedPane = new JTabbedPane();
         tabbedPane.add("file " + filecount, new Canvas());
         files.add(new ArrayList<drawnShape>());
@@ -148,6 +151,7 @@ public class GUI extends JFrame {
                 currentfile = tabbedPane.getSelectedIndex();
             }
         });
+        // Loads a file
         load.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ++filecount;
@@ -156,6 +160,7 @@ public class GUI extends JFrame {
                 files.add(fileloader.updateCanvas(graphSettings, parser.getdFile()));
             }
         });
+        // Opens a new file
         newfile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ++filecount;
@@ -163,6 +168,7 @@ public class GUI extends JFrame {
                 files.add(new ArrayList<>());
             }
         });
+        // Closes a new file
         closefile.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 tabbedPane.remove(tabbedPane.getSelectedIndex());
@@ -170,7 +176,10 @@ public class GUI extends JFrame {
             }
         });
         this.add(tabbedPane);
+
+        //Add colours to the top of the frame
         this.add(colours, BorderLayout.NORTH);
+
         // Show the frame
         this.setVisible(true);
     }
@@ -199,8 +208,7 @@ public class GUI extends JFrame {
         Icon butIcon = new ImageIcon(iconFile);
         aButton.setIcon(butIcon);
 
-        // Make the proper actionPerformed method execute when the
-        // specific button is pressed
+        // Changes stroke and fill colour to the colour menu selection
         aButton.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
@@ -270,12 +278,19 @@ public class GUI extends JFrame {
 
     private class Canvas extends JComponent {
         // ArrayLists that contain each shape drawn along with
-        // that shapes stroke and fill
+        // that shapes stroke and fill)
         ArrayList<Double> coordlist = new ArrayList<>();
         ArrayList<Integer> xPoints = new ArrayList<Integer>(); //to store x coordinates
         ArrayList<Integer> yPoints = new ArrayList<Integer> (); //to store y coordinates
-        int numPoints = 0;
+
+        // Monitors coordinates
         Point drawStart, drawEnd;
+
+        // Used to store polygon shape points
+        int numPoints = 0;
+
+        // Enable/disable polygon help message
+        boolean shown = false;
 
         // Monitors events on the drawing area of the frame
 
@@ -309,8 +324,15 @@ public class GUI extends JFrame {
                         files.get(currentfile).add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.PLOT, tempcoords));
                         repaint();
 
+                        //Draw polygon
                     } else if (currentAction == 5) {
-
+                        if (!shown){
+                            JOptionPane.showInternalMessageDialog(null, "To draw a polygon, " +
+                                            "left-click to place points on the canvas. " +
+                                            "Then, right-click to finish the polygon.",
+                                    "Polygon", JOptionPane.INFORMATION_MESSAGE);
+                            shown = true;
+                        }
                         if (e.getButton() == MouseEvent.BUTTON1) {
                             numPoints++;
                             coordlist.add((double)e.getX());
@@ -339,9 +361,7 @@ public class GUI extends JFrame {
 
                     if(currentAction != 1){
 
-                        // Create a shape using the starting x & y
-                        // and finishing x & y positions
-
+                        // Create a shape using the starting x & y and finishing x & y positions
                         Shape aShape = null;
                         ArrayList<Double> tempcoords = new ArrayList<>();
                         DrawingCommand.DrawCommands tmptype = null;
@@ -393,7 +413,6 @@ public class GUI extends JFrame {
 
                 public void mouseDragged(MouseEvent e) {
                     // Get the final x & y position after the mouse is dragged
-
                     drawEnd = new Point(e.getX(), e.getY());
                     repaint();
                 }
@@ -450,6 +469,7 @@ public class GUI extends JFrame {
                                 drawEnd.x, drawEnd.y);
                     }
                     if (currentAction == 5){
+                        // Create a new polygon using x & y coordinates
                         aShape = drawLine(drawStart.x, drawStart.y,
                                 drawEnd.x, drawEnd.y);
                     }
