@@ -17,6 +17,9 @@ public class drawnShape {
         this.shapeFillbool = fillstate;
         this.shapeStroke = pen;
         this.type = type;
+        if (type == DrawingCommand.DrawCommands.PLOT) {
+            System.out.println(cordinates);
+        }
         this.coords = cordinates;
     }
 

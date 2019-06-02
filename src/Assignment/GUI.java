@@ -13,17 +13,15 @@ import java.util.ArrayList;
 
 public class GUI extends JFrame {
 
-    JButton blackBtn, cyanBtn, greenBtn, redBtn, magentaBtn,
+    private JButton blackBtn, cyanBtn, greenBtn, redBtn, magentaBtn,
             orangeBtn, yellowBtn, plotBtn, lineBtn, rectangleBtn, ellipseBtn,
             polygonBtn, noFillBtn, fillBtn;
 
-    FileParser parser = new FileParser();
 
+
+    private FileParser parser = new FileParser();
     // Used to monitor which shape is selected
-    int currentAction = 1;
-    int currentColour = 1;
-    int currentfile = 0;
-    int filecount = 1;
+    private int currentAction = 1, currentColour = 1, currentfile = 0, filecount = 1;
     boolean fill = false;
 
     // Stores drawing rules
@@ -307,22 +305,23 @@ public class GUI extends JFrame {
                     if (currentAction != 1&& currentAction!=5) {
 
                         // When the mouse is pressed get x & y position
+
                         drawStart = new Point(e.getX(), e.getY());
                         drawEnd = drawStart;
                         repaint();
 
                         //Draw plot
                     } else if (currentAction == 1) {
-
+                        ArrayList<Double> tempcoords = new ArrayList<>();
                         int x = e.getX();
                         int y = e.getY();
 
                         strokeColor = fillColor;
 
                         aShape = drawLine(x, y, e.getX(), e.getY());
-                        coordlist.add((double)x);
-                        coordlist.add((double)y);
-                        files.get(currentfile).add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.PLOT, coordlist));
+                        tempcoords.add((double) x);
+                        tempcoords.add((double) y);
+                        files.get(currentfile).add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.PLOT, tempcoords));
                         repaint();
 
                         //Draw polygon
@@ -342,11 +341,15 @@ public class GUI extends JFrame {
                             yPoints.add(e.getY());
                         } else if (e.getButton() == MouseEvent.BUTTON3) {
                             if (numPoints > 3) {
+                                ArrayList<Double> tempcoords = new ArrayList<>();
+                                for (int i = 0; i < numPoints; i++) {
+                                    tempcoords.add((double) xPoints.get(i));
+                                    tempcoords.add((double) yPoints.get(i));
+                                }
                                 aShape = drawPolygon(convertIntegers(xPoints), convertIntegers(yPoints), numPoints);
                                 files.get(currentfile).add(new drawnShape(aShape, fillColor, fill, strokeColor, DrawingCommand.DrawCommands.POLYGON, coordlist));
-                                xPoints.clear();
-                                yPoints.clear();
-                                coordlist.clear();
+                                ArrayList<Integer> xPoints = new ArrayList<Integer>(); //to store x coordinates
+                                ArrayList<Integer> yPoints = new ArrayList<Integer>(); //to store y coordinates
                                 numPoints=0;
                                 repaint();
                             }

@@ -5,6 +5,7 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 public class FileParser {
     private ArrayList<DrawingCommand> dFile = new ArrayList<>();
@@ -50,6 +51,9 @@ public class FileParser {
                     dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.LINE));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.RECTANGLE.cmd())) {
                     dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.RECTANGLE));
+
+                } else if (commands.get(i).contains(DrawingCommand.DrawCommands.POLYGON.cmd())) {
+                    dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.POLYGON));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.ELLIPSE.cmd())) {
                     dFile.add(new CreationCommand(coordsdouble, DrawingCommand.DrawCommands.ELLIPSE));
                 } else if (commands.get(i).contains(DrawingCommand.DrawCommands.PLOT.cmd())) {
@@ -92,9 +96,12 @@ public class FileParser {
             try {
                 File file = chooser.getSelectedFile();
                 BufferedWriter writer = new BufferedWriter(new FileWriter(file + ".vec"));
-                for (DrawingCommand k : input) {
-                    writer.write(k.tostring());
-                    writer.newLine();
+                Iterator<DrawingCommand> commandIterator = input.iterator();
+                for (int i = 0; i < input.size(); i++) {
+                    writer.write(commandIterator.next().tostring());
+                    if (commandIterator.hasNext()) {
+                        writer.newLine();
+                    }
                 }
                 writer.close();
             } catch (IOException e) {
