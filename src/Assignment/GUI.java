@@ -291,6 +291,9 @@ public class GUI extends JFrame {
         // Used to store polygon shape points
         int numPoints = 0;
 
+        // Enable/disable polygon help message
+        boolean shown = false;
+
         // Monitors events on the drawing area of the frame
 
         public Canvas() {
@@ -324,7 +327,13 @@ public class GUI extends JFrame {
 
                         //Draw polygon
                     } else if (currentAction == 5) {
-
+                        if (!shown){
+                            JOptionPane.showInternalMessageDialog(null, "To draw a polygon, " +
+                                            "left-click to place points on the canvas. " +
+                                            "Then, right-click to finish the polygon.",
+                                    "Polygon", JOptionPane.INFORMATION_MESSAGE);
+                            shown = true;
+                        }
                         if (e.getButton() == MouseEvent.BUTTON1) {
                             numPoints++;
                             coordlist.add((double)e.getX());
