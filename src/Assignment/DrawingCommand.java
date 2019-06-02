@@ -40,7 +40,7 @@ class CreationCommand implements DrawingCommand {
     public CreationCommand(ArrayList<Double> coordinates, DrawCommands type) {
         this.values = coordinates;
         this.cmdtype = type;
-        this.cmdstring = type.toString() + " " + coordinates.toString().replace('[', ' ').replace(',', ' ').replace(']', ' ');
+        this.cmdstring = type.toString() + " " + coordinates.toString().replace("[", "").replace(",", "").replace("]", "");
 
     }
 

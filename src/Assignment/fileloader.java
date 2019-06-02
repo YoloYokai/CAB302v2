@@ -3,7 +3,6 @@ package Assignment;
 import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Line2D;
-import java.awt.geom.PathIterator;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
@@ -38,12 +37,12 @@ public class fileloader {
             }
 
             ArrayList<Double> tmpcoords = new ArrayList<>();
+            System.out.println(a.getPos());
             for (int i =0; i<a.getPos().size();i+=2){
                 tmpcoords.add(Math.round ((a.getPos().get(i)/width) * 1000000.0) / 1000000.0);
                 tmpcoords.add(Math.round ((a.getPos().get(i+1)/height) * 1000000.0) / 1000000.0);
             }
             if (a.getType() == DrawingCommand.DrawCommands.PLOT) {
-                System.out.println(tmpcoords);
                 output.add(new CreationCommand(tmpcoords,DrawingCommand.DrawCommands.PLOT));
             } else if (a.getType() == DrawingCommand.DrawCommands.LINE) {
                 output.add(new CreationCommand(tmpcoords,DrawingCommand.DrawCommands.LINE));
@@ -75,6 +74,7 @@ public class fileloader {
                     canvas.fill(CmdtoShape(a, width, height));
                 }
                 output.add(new drawnShape(CmdtoShape(a, width, height), fillcolor, fill, pencolor, a.type(),Cmdcoords(a)));
+
             }
 
             if (a.type() == DrawingCommand.DrawCommands.FILL) {
@@ -108,9 +108,11 @@ public class fileloader {
         } else if (input.type() == DrawingCommand.DrawCommands.POLYGON) {
             ArrayList<Double> x = new ArrayList<>();
             ArrayList<Double> y = new ArrayList<>();
+            int count = 0;
             for (int i = 0; i < input.coordinates().size(); i += 2) {
                 x.add(input.coordinates().get(i) * width);
                 y.add(input.coordinates().get(i + 1) * height);
+                count++;
             }
             int[] xout = new int[x.size()];
             for (int i = 0; i < xout.length; i++) {
@@ -120,7 +122,7 @@ public class fileloader {
             for (int i = 0; i < yout.length; i++) {
                 yout[i] = y.get(i).intValue();
             }
-            output = new Polygon(xout, yout, x.size());
+            output = new Polygon(xout, yout, count);
         } else {
             output = null;
         }
